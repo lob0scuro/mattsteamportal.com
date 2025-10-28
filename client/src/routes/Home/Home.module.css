@@ -7,7 +7,7 @@ ul.postBoard {
   border: 1px solid #fff;
   border-radius: 12px;
   margin-top: 0.5rem;
-  max-height: 40rem;
+  max-height: 80rem;
   overflow: auto;
 }
 

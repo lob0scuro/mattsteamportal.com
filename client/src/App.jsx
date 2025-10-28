@@ -14,6 +14,7 @@ import Home from "./routes/Home/Home.jsx";
 import Login from "./routes/Auth/Login/Login.jsx";
 import Register from "./routes/Auth/Register/Register.jsx";
 import PostForm from "./routes/PostForm/PostForm.jsx";
+import Post from "./routes/Post/Post.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -21,6 +22,7 @@ const App = () => {
       <Route path="/" element={<RootLayout />}>
         <Route element={<ProtectedLayout />}>
           <Route index element={<Home />} />
+          <Route path="post/:post_id" element={<Post />} />
           <Route element={<AdminLayout />}>
             <Route path="post-form" element={<PostForm />} />
           </Route>

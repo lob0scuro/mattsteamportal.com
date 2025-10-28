@@ -16,6 +16,7 @@ const Home = () => {
       const response = await fetch(`/api/read/get_posts/${page}/10`);
       const data = await response.json();
       if (!data.success) {
+        setPosts([]);
         toast.error(data.message);
       }
       console.log(data.posts);
@@ -24,38 +25,46 @@ const Home = () => {
     fetchPosts();
   }, []);
 
+  const handlePostClick = (id) => {
+    navigate(`/post/${id}`);
+  };
+
   return (
     <>
       <div className={styles.postBoardContainer}>
         <h4>Recent Posts</h4>
         <ul className={styles.postBoard}>
-          {posts?.map(
-            ({
-              id,
-              title,
-              content,
-              created_at,
-              category,
-              author,
-              file_path,
-            }) => (
-              <li key={id}>
-                <h3>{title}</h3>
-                <div>
-                  <p>{content}</p>
-                  {file_path && (
-                    <img
-                      className={styles.postImage}
-                      src={`http://127.0.0.1:8000/${file_path}`}
-                      alt=""
-                    />
-                  )}
-                </div>
-                <p>
-                  <b>{author}</b>
-                  <span>{formatDate(created_at)}</span>
-                </p>
-              </li>
+          {posts?.length === 0 ? (
+            <li>No posts to show</li>
+          ) : (
+            posts?.map(
+              ({
+                id,
+                title,
+                content,
+                created_at,
+                category,
+                author,
+                file_path,
+              }) => (
+                <li key={id} onClick={() => handlePostClick(id)}>
+                  <h3>{title}</h3>
+                  <div>
+                    <p>{content}</p>
+                    {file_path && (
+                      <img
+                        className={styles.postImage}
+                        src={`http://127.0.0.1:8000/${file_path}`}
+                        alt=""
+                      />
+                    )}
+                  </div>
+                  <p>
+                    <b>{author}</b>
+                    <span>{formatDate(created_at)}</span>
+                  </p>
+                </li>
+              )
             )
           )}
         </ul>
