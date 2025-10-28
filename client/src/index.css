@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+
+:root {
+  --background: #2a2829;
+  --backgroundDark: #1e1e1e;
+  --inputBackground: #d9d9d9;
+  --bannerBackground: #262f4c;
+  --linkText: #6d7db2;
+  --textPrimary: #f9f9f9;
+  --textSecondary: #8999af;
+  --buttonPrimary: #040b22;
+  --buttonSecondary: #8999af;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: unset;
+  text-decoration: none;
+}
+
+button {
+  background-color: var(--bannerBackground);
+  color: var(--textPrimary);
+  box-shadow: -2px 2px 6px #000;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 18px;
+}
+
+#root {
+  height: 100dvh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  background-color: var(--backgroundDark);
+  font-family: "Inter", sans-serif;
+  color: var(--textPrimary);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+header {
+  width: 100%;
+  height: 8rem;
+  background-color: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#container {
+  flex: 1;
+  padding: 1rem;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+footer {
+  width: 100%;
+  height: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background);
+}
+
+footer button {
+  background-color: transparent;
+  border: none;
+  color: var(--linkText);
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: underline;
+  box-shadow: unset;
+}

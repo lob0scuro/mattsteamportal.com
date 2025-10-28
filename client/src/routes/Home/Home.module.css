@@ -1,0 +1,23 @@
+ul.postBoard {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 8px;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  max-height: 40rem;
+  overflow: auto;
+}
+
+ul.postBoard li {
+  background-color: var(--background);
+  padding: 4px;
+}
+
+img.postImage {
+  width: 60%;
+  height: auto;
+  object-fit: cover;
+}

@@ -1,0 +1,67 @@
+import styles from "./Home.module.css";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { formatDate } from "../../utils/Helpers";
+
+const Home = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await fetch(`/api/read/get_posts/${page}/10`);
+      const data = await response.json();
+      if (!data.success) {
+        toast.error(data.message);
+      }
+      console.log(data.posts);
+      setPosts(data.posts);
+    };
+    fetchPosts();
+  }, []);
+
+  return (
+    <>
+      <div className={styles.postBoardContainer}>
+        <h4>Recent Posts</h4>
+        <ul className={styles.postBoard}>
+          {posts?.map(
+            ({
+              id,
+              title,
+              content,
+              created_at,
+              category,
+              author,
+              file_path,
+            }) => (
+              <li key={id}>
+                <h3>{title}</h3>
+                <div>
+                  <p>{content}</p>
+                  {file_path && (
+                    <img
+                      className={styles.postImage}
+                      src={`http://127.0.0.1:8000/${file_path}`}
+                      alt=""
+                    />
+                  )}
+                </div>
+                <p>
+                  <b>{author}</b>
+                  <span>{formatDate(created_at)}</span>
+                </p>
+              </li>
+            )
+          )}
+        </ul>
+      </div>
+    </>
+  );
+};
+
+export default Home;
