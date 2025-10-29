@@ -59,22 +59,11 @@ const Home = () => {
                   <div>
                     <p>{content}</p>
                     {file_path && (
-                      <>
-                        {file_path.toLowerCase().endsWith(".pdf") ? (
-                          <embed
-                            src={`http://127.0.0.1:8000/${file_path}`}
-                            type="application/pdf"
-                            width={"100%"}
-                            height={"300px"}
-                          />
-                        ) : (
-                          <img
-                            className={styles.postImage}
-                            src={`http://127.0.0.1:8000/${file_path}`}
-                            alt=""
-                          />
-                        )}
-                      </>
+                      <img
+                        className={styles.postImage}
+                        src={`http://127.0.0.1:8000/${file_path}`}
+                        alt=""
+                      />
                     )}
                   </div>
                   <p className={styles.postHomeFooter}>

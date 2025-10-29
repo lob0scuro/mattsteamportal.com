@@ -4,9 +4,10 @@ import styles from "./Post.module.css";
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utils/Helpers";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Post = () => {
+  const navigate = useNavigate();
   const { post_id } = useParams();
   const [post, setPost] = useState({});
 
@@ -24,29 +25,35 @@ const Post = () => {
     fetchPost();
   }, [post_id]);
 
+  const handleDelete = async () => {
+    if (!confirm("Delete Post?")) return;
+
+    try {
+      const response = await fetch(`/api/delete/delete_post/${post_id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.message || "Something went wrong");
+      }
+      toast.success("Post has been deleted");
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
+      console.error("[ERROR]:: ", error);
+    }
+  };
+
   return (
     <div className={styles.postPageContainer}>
       <h1>{post.title}</h1>
       {post.file_path && (
         <div className={styles.postImageContainer}>
-          {post.file_path.toLowerCase().endsWith(".pdf") ? (
-            <>
-              <embed
-                src={`http://127.0.0.1:8000/${post.file_path}`}
-                type="application/pdf"
-                width={"100%"}
-                height={"500px"}
-              />
-              <a
-                href={`http://127.0.0.1:8000/${post.file_path}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FontAwesomeIcon icon={faArrowUpRightFromSquare} /> open PDF in
-                new tab
-              </a>
-            </>
-          ) : (
+          {post.file_path && (
             <img
               src={`http://127.0.0.1:8000/${post.file_path}`}
               alt="Post image"
@@ -58,6 +65,12 @@ const Post = () => {
       <div className={styles.postPageFooter}>
         <p>{post.author}</p>
         <small>{formatDate(post.created_at)}</small>
+      </div>
+      <div className={styles.postControls}>
+        <button onClick={() => navigate(`/edit-post/${post_id}`)}>
+          Edit Post
+        </button>
+        <button onClick={handleDelete}>Delete Post</button>
       </div>
     </div>
   );

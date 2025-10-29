@@ -15,6 +15,7 @@ import Login from "./routes/Auth/Login/Login.jsx";
 import Register from "./routes/Auth/Register/Register.jsx";
 import PostForm from "./routes/PostForm/PostForm.jsx";
 import Post from "./routes/Post/Post.jsx";
+import EditPostForm from "./routes/PostForm/EditPostForm.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="post/:post_id" element={<Post />} />
           <Route element={<AdminLayout />}>
             <Route path="post-form" element={<PostForm />} />
+            <Route path="edit-post/:post_id" element={<EditPostForm />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />} />
