@@ -15,7 +15,7 @@ export const AuthContext = ({ children }) => {
         });
         if (response.ok) {
           const data = await response.json();
-          console.log(data.user);
+          // console.log(data.user);
           setUser(data.user);
         } else {
           setUser(null);

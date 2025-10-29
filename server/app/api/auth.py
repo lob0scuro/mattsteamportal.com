@@ -63,5 +63,5 @@ def logout():
 @auth_bp.route('/hydrate_user', methods=['GET'])
 @login_required
 def hydrate_user():
-    user_data = current_user.serialize()
+    user_data = current_user.serialize_basic()
     return jsonify(success=True, user=user_data), 200

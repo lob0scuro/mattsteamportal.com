@@ -63,6 +63,7 @@ class Post(db.Model):
             'category': self.category,
             'file_path': self.file_path,
             'author_id': self.author_id,
+            'created_at': self.created_at,
             'author': {
                 'id': self.author.id,
                 'username': self.author.username,

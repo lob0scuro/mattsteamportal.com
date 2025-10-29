@@ -38,7 +38,7 @@ def get_post(id):
     post = Post.query.get(id)
     if not post:
         return jsonify(success=False, message="Could not query post"), 400
-    return jsonify(success=True, post=post.serialize()), 200
+    return jsonify(success=True, post=post.serialize_basic()), 200
 
 
 @read_bp.route("/get_posts/<int:page>/<int:limit>", methods=["GET"])
@@ -47,6 +47,10 @@ def get_posts(page, limit):
     offset = (page - 1) * limit
     limit = int(limit)
     posts = Post.query.order_by(Post.created_at.desc()).offset(offset).limit(limit).all()
-    if not posts:
-        return jsonify(success=False, message="Could not query posts")
-    return jsonify(success=True, page=page, limit=limit, posts=[p.serialize_basic() for p in posts]), 200
+    return jsonify(
+        success=True, 
+        page=page, 
+        limit=limit, 
+        posts=[p.serialize_basic() for p in posts],
+        message="No posts found" if not posts else "Posts retrieved successfully"
+        ), 200

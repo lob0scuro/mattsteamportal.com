@@ -1,7 +1,7 @@
 import styles from "./Home.module.css";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { formatDate } from "../../utils/Helpers";
 
@@ -13,17 +13,21 @@ const Home = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`/api/read/get_posts/${page}/10`);
-      const data = await response.json();
-      if (!data.success) {
-        setPosts([]);
-        toast.error(data.message);
+      try {
+        const response = await fetch(`/api/read/get_posts/${page}/10`);
+        const data = await response.json();
+        if (data.posts.length === 0) {
+          setPosts([]);
+        } else {
+          setPosts(data.posts);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An error occured when loading posts");
       }
-      console.log(data.posts);
-      setPosts(data.posts);
     };
     fetchPosts();
-  }, []);
+  }, [page]);
 
   const handlePostClick = (id) => {
     navigate(`/post/${id}`);
@@ -32,10 +36,13 @@ const Home = () => {
   return (
     <>
       <div className={styles.postBoardContainer}>
-        <h4>Recent Posts</h4>
+        <div className={styles.postBoardHeader}>
+          <h4>Recent Posts</h4>
+          {user.is_admin && <Link to={"/post-form"}>+</Link>}
+        </div>
         <ul className={styles.postBoard}>
           {posts?.length === 0 ? (
-            <li>No posts to show</li>
+            <li className={styles.noPost}>No posts to show</li>
           ) : (
             posts?.map(
               ({
@@ -52,14 +59,25 @@ const Home = () => {
                   <div>
                     <p>{content}</p>
                     {file_path && (
-                      <img
-                        className={styles.postImage}
-                        src={`http://127.0.0.1:8000/${file_path}`}
-                        alt=""
-                      />
+                      <>
+                        {file_path.toLowerCase().endsWith(".pdf") ? (
+                          <embed
+                            src={`http://127.0.0.1:8000/${file_path}`}
+                            type="application/pdf"
+                            width={"100%"}
+                            height={"300px"}
+                          />
+                        ) : (
+                          <img
+                            className={styles.postImage}
+                            src={`http://127.0.0.1:8000/${file_path}`}
+                            alt=""
+                          />
+                        )}
+                      </>
                     )}
                   </div>
-                  <p>
+                  <p className={styles.postHomeFooter}>
                     <b>{author}</b>
                     <span>{formatDate(created_at)}</span>
                   </p>

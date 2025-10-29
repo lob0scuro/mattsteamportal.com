@@ -97,7 +97,7 @@ const PostForm = () => {
             type="file"
             name="upload"
             id="upload"
-            accept="img/png, img/jpg"
+            accept="img/png, img/jpg, application/pdf"
             onChange={handleFileChange}
           />
         </div>
@@ -110,11 +110,21 @@ const PostForm = () => {
             >
               X
             </button>
-            <img
-              className={styles.imagePreview}
-              src={selectedImage}
-              alt="Image Preview"
-            />
+            {file.type === "application/pdf" ? (
+              <embed
+                src={selectedImage}
+                type="application/pdf"
+                width={"100%"}
+                height={"auto"}
+                className={styles.pdfPreview}
+              />
+            ) : (
+              <img
+                className={styles.imagePreview}
+                src={selectedImage}
+                alt="Image Preview"
+              />
+            )}
           </div>
         )}
         <div>
