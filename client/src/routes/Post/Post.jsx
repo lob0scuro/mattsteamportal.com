@@ -6,6 +6,7 @@ import {
 import styles from "./Post.module.css";
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utils/Helpers";
+import { SERVER } from "../../utils/Variables";
 import toast from "react-hot-toast";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
@@ -62,10 +63,7 @@ const Post = () => {
       {post.file_path && (
         <div className={styles.postImageContainer}>
           {post.file_path && (
-            <img
-              src={`http://127.0.0.1:8000/${post.file_path}`}
-              alt="Post image"
-            />
+            <img src={`${SERVER}${post.file_path}`} alt="Post image" />
           )}
         </div>
       )}

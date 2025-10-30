@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    is_admin: false,
     first_name: "",
     last_name: "",
     username: "",
@@ -50,17 +49,6 @@ const Register = () => {
     <>
       <h1>Register</h1>
       <form onSubmit={handleSubmit} className={styles.registrationForm}>
-        <div className={styles.adminCheckBox}>
-          <label htmlFor="is_admin">Admin</label>
-          <input
-            type="checkbox"
-            name="is_admin"
-            id="is_admin"
-            onChange={(e) =>
-              setFormData({ ...formData, is_admin: e.target.checked })
-            }
-          />
-        </div>
         <div>
           <label htmlFor="first_name">First Name</label>
           <input

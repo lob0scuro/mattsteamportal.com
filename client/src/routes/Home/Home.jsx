@@ -4,6 +4,7 @@ import { useAuth } from "../../Context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { formatDate } from "../../utils/Helpers";
+import { SERVER } from "../../utils/Variables";
 
 const Home = () => {
   const { user } = useAuth();
@@ -61,7 +62,7 @@ const Home = () => {
                     {file_path && (
                       <img
                         className={styles.postImage}
-                        src={`http://127.0.0.1:8000/${file_path}`}
+                        src={`${SERVER}${file_path}`}
                         alt=""
                       />
                     )}

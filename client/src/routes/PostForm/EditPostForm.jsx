@@ -2,6 +2,7 @@ import styles from "./PostForm.module.css";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { SERVER } from "../../utils/Variables";
 
 const EditPostForm = () => {
   const navigate = useNavigate();
@@ -31,8 +32,8 @@ const EditPostForm = () => {
         });
 
         if (data.post.file_path) {
-          setFile(`http://127.0.0.1:8000/${data.post.file_path}`);
-          setSelectedImage(`http://127.0.0.1:8000/${data.post.file_path}`);
+          setFile(`${SERVER}${data.post.file_path}`);
+          setSelectedImage(`${SERVER}${data.post.file_path}`);
         }
       } catch (error) {
         toast.error("Error fetching post");
