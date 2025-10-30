@@ -61,6 +61,10 @@ header {
   justify-content: center;
 }
 
+header img {
+  width: 8rem;
+}
+
 #container {
   flex: 1;
   padding: 1rem;

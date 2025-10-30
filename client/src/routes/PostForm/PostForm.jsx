@@ -100,7 +100,7 @@ const PostForm = () => {
             type="file"
             name="upload"
             id="upload"
-            accept="img/png, img/jpg, application/pdf"
+            accept="image/*, application/pdf"
             onChange={handleFileChange}
           />
         </div>

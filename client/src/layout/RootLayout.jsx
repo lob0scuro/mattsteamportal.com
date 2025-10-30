@@ -3,6 +3,7 @@ import { Outlet, useNavigate, Link } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "../Context/AuthContext";
 import toast from "react-hot-toast";
+import LOGO from "../assets/matts-logo.png";
 
 const RootLayout = () => {
   const { user, setUser } = useAuth();
@@ -24,7 +25,9 @@ const RootLayout = () => {
     <>
       <header>
         <h1>
-          <Link to={"/"}>Matt's Team Portal</Link>
+          <Link to={"/"}>
+            <img src={LOGO} />
+          </Link>
         </h1>
       </header>
       <div id="container">

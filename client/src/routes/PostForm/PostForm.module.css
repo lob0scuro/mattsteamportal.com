@@ -21,6 +21,11 @@ select {
   padding: 8px 4px;
   border-radius: 8px;
   border: 1px solid var(--linkText);
+  color: var(--backgroundDark);
+}
+
+form.postForm div select {
+  width: 100%;
 }
 
 form.postForm div textarea {
@@ -65,8 +70,10 @@ input[type="file"] {
 
 form.postForm button {
   font-size: 1.5rem;
-  padding: 5px 12px;
+  padding: 10px 60px;
   border-radius: 8px;
   align-self: center;
   border: none;
+  text-transform: uppercase;
+  margin-top: 2rem;
 }
