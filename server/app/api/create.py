@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 import os
 from werkzeug.utils import secure_filename
 from pdf2image import convert_from_path
+import platform
 
 
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
@@ -36,11 +37,16 @@ def create_post():
             pdf_save_path = os.path.join(upload_folder, f"{current_user.id}_{safe_filename}")
             file.save(pdf_save_path)
             
+            poppler_path = None
+            
+            if platform.system() == "Windows":
+                poppler_path = r"C:\\Program Files\\poppler-25.07.0\\Library\\bin"
+            
             images = convert_from_path(
                 pdf_save_path,
                 dpi=200,
                 fmt="png",
-                poppler_path=r"C:\\Program Files\\poppler-25.07.0\\Library\\bin"
+                poppler_path=poppler_path
             )
             
             png_filename = f"{current_user.id}_{safe_filename.rsplit('.',1)[0]}.png"
@@ -67,7 +73,7 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         
-        return jsonify(success=True, message="Post has been successfully created!"), 201
+        return jsonify(success=True, message="Post has been successfully created!", post_id=post.id), 201
     except Exception as e:
         db.session.rollback()
         print(f"Error when uploading new post: {e}")

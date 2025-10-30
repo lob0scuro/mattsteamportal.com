@@ -9,6 +9,7 @@ server/logs/
 server/__pycache__/
 server/app/__pycache__/
 server/app/api/__pycache__/
+server/uploads/
 
 __pycache__/
 __pycache__/*

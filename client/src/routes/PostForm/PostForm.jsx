@@ -1,8 +1,10 @@
 import styles from "./PostForm.module.css";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const PostForm = () => {
+  const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
@@ -55,6 +57,7 @@ const PostForm = () => {
       });
       setFile(null);
       setSelectedImage(null);
+      navigate(`/post/${data.post_id}`);
     } catch (error) {
       console.error("Error: ", error);
       toast.error(error.message);

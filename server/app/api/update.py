@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from pdf2image import convert_from_path
 import os
+import platform
 
 update_bp = Blueprint("update", __name__)
 
@@ -21,7 +22,6 @@ def update_post(id):
     
     if post.author_id != current_user.id:
         return jsonify(success=False, message="You are not authorized to delete this post.")
-    field_list = ["title", "content", "category", "file_path"]
     title = request.form.get("title", "").strip()
     content = request.form.get("content", "").strip()
     category = request.form.get("category", "").strip()
@@ -43,11 +43,16 @@ def update_post(id):
             pdf_save_path = os.path.join(upload_folder, f"{current_user.id}_{safe_filename}")
             file.save(pdf_save_path)
             
+            poppler_path = None
+            
+            if platform.system() == "Windows":
+                poppler_path = r"C:\\Program Files\\poppler-25.07.0\\Library\\bin"
+            
             images = convert_from_path(
                 pdf_save_path,
                 dpi=200,
                 fmt="png",
-                poppler_path=r"C:\\Program Files\\poppler-25.07.0\\Library\\bin"
+                poppler_path=poppler_path
             )
             
             png_filename = f"{current_user.id}_{safe_filename.rsplit('.',1)[0]}.png"

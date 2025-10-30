@@ -1,10 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowUpRightFromSquare,
+  faSignsPost,
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./Post.module.css";
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utils/Helpers";
 import toast from "react-hot-toast";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 const Post = () => {
   const navigate = useNavigate();
@@ -50,6 +53,11 @@ const Post = () => {
 
   return (
     <div className={styles.postPageContainer}>
+      <Link className={styles.createPostButton}>
+        {" "}
+        <FontAwesomeIcon icon={faSignsPost} />
+        Create New Post
+      </Link>
       <h1>{post.title}</h1>
       {post.file_path && (
         <div className={styles.postImageContainer}>

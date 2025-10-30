@@ -7,6 +7,13 @@
   gap: 1rem;
 }
 
+.createPostButton {
+  margin-left: auto;
+  margin-right: 10px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .postPageContainer h1 {
   text-align: center;
 }

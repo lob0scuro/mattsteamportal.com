@@ -65,3 +65,11 @@ def logout():
 def hydrate_user():
     user_data = current_user.serialize_basic()
     return jsonify(success=True, user=user_data), 200
+
+@auth_bp.route("/invite_link", methods=["POST"])
+def invite_link():
+    email = request.form.get("email").strip()
+    if not email:
+        return jsonify(success=False, message="No data in payload"), 400
+      
+    

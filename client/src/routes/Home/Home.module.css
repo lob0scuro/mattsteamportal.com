@@ -52,10 +52,15 @@ ul.postBoard li.noPost {
   background-color: var(--backgroundDark);
 }
 
+ul.postBoard li div {
+  width: 100%;
+}
+
 img.postImage {
-  width: 60%;
+  width: 80%;
   height: auto;
   object-fit: cover;
+  margin-top: 1rem;
 }
 
 .postHomeFooter {

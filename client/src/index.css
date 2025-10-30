@@ -91,3 +91,8 @@ footer button {
   text-decoration: underline;
   box-shadow: unset;
 }
+
+a.registration-link {
+  text-decoration: underline;
+  color: var(--linkText);
+}

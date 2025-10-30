@@ -32,7 +32,17 @@ const RootLayout = () => {
       </div>
       <Toaster position="bottom-right" reverseOrder={false} />
       <footer>
-        {user && <button onClick={logout}>LOGOUT</button>}
+        {user && (
+          <>
+            <button onClick={logout}>LOGOUT</button>
+            {user.is_admin && (
+              <Link to={"/send-invite-link"} className="registration-link">
+                Send Registration Link
+              </Link>
+            )}
+          </>
+        )}
+
         <p>© 2025 Matt's Appliances</p>
       </footer>
     </>

@@ -16,6 +16,7 @@ import Register from "./routes/Auth/Register/Register.jsx";
 import PostForm from "./routes/PostForm/PostForm.jsx";
 import Post from "./routes/Post/Post.jsx";
 import EditPostForm from "./routes/PostForm/EditPostForm.jsx";
+import SendLink from "./routes/Auth/SendLink/SendLink.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -27,6 +28,7 @@ const App = () => {
           <Route element={<AdminLayout />}>
             <Route path="post-form" element={<PostForm />} />
             <Route path="edit-post/:post_id" element={<EditPostForm />} />
+            <Route path="send-invite-link" element={<SendLink />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />} />
