@@ -18,7 +18,6 @@ def register():
     email = data.get('email')
     password = data.get('password1')
     check_password = data.get('password2')
-    is_admin = data.get('is_admin')
     
     if password != check_password:
         return jsonify(success=False, message="Passwords do not match"), 400
@@ -33,7 +32,6 @@ def register():
         last_name=last_name.capitalize(),
         email=email,
         password_hash=password_hash,
-        is_admin = is_admin
     )
     db.session.add(new_user)
     db.session.commit()
@@ -72,10 +70,11 @@ def hydrate_user():
 def invite_link():
     if not current_user.is_admin:
         return jsonify(success=False, message="Unauthorized"), 403
-    new_employee = request.form.get("email").strip()
+    data = request.get_json()
+    new_employee = data.get("email").strip()
     if not new_employee:
         return jsonify(success=False, message="No data in payload"), 400
-    registration_link = "http://127.0.0.1:5173/register"
+    registration_link = "http://localhost:5173/register"
     
     body = f"""
     <html>

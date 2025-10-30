@@ -11,6 +11,9 @@ server/app/__pycache__/
 server/app/api/__pycache__/
 server/uploads/
 
+client/.env.local
+client/.env.production
+
 __pycache__/
 __pycache__/*
 **/__pycache__/
