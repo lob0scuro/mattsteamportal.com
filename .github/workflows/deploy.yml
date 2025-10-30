@@ -1,0 +1,46 @@
+name: Deploy to Matt's Team Portal
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Setup SSH key
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+                  chmod 600 ~/.ssh/id_ed25519
+                  ssh-keyscan -H 45.56.74.113 >> ~/.ssh/known_hosts
+              shell: bash
+
+            - name: Deploy files
+              run: |
+                  # Clean up old deploy tarballs
+                  ssh cameron@45.56.74.113 "rm -f /var/www/mattsteamportal.com/server/deploy.tar.gz"
+
+                  # Package Flask backend
+                  tar --exclude='env' --exclude='__pycache__' --exclude='*.pyc' --exclude='.git' \
+                      --exclude='deploy.tar.gz' -czf deploy.tar.gz -C server .
+
+                  # Copy archive to Linode
+                  scp deploy.tar.gz cameron@45.56.74.113:/var/www/mattsteamportal.com/server/
+
+                  # Build and deploy React frontend
+                  cd client
+                  npm ci
+                  npm run build
+                  scp -r dist/* cameron@45.56.74.113:/var/www/mattsteamportal.com/client/dist/
+              shell: bash
+
+            - name: SSH into server and restart app
+              run: |
+                  ssh cameron@45.56.74.113 'deploy-mattsteamportal'
+              shell: bash

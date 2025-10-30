@@ -28,7 +28,7 @@ class Config:
     if FLASK_ENV == "production":
         CORS_ORIGINS = ["https://blutape.net"]
     else:
-        CORS_ORIGINS = ["http://localhost:5173",  "http://192.168.1.207:5173",  "http://192.168.1.248:5173", "http://192.168.1.165:5173"]  # 0: local; 1: back shop; 2: main office; 3: home pi;
+        CORS_ORIGINS = ["http://localhost:5173",  "http://192.168.1.207:5173",  "http://192.168.1.248:5173", "http://192.168.1.165:5173", "http://192.168.1.181:5173"]  # 0: local; 1: back shop; 2: main office; 3: home pi; 4: home laptop;
     CORS_SUPPORTS_CREDENTIALS = True
     
     # Mail
