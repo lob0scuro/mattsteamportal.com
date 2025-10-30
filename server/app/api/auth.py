@@ -1,7 +1,9 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db, bcrypt
 from app.models import User
+from flask_mailman import EmailMessage
+
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -68,8 +70,51 @@ def hydrate_user():
 
 @auth_bp.route("/invite_link", methods=["POST"])
 def invite_link():
-    email = request.form.get("email").strip()
-    if not email:
+    if not current_user.is_admin:
+        return jsonify(success=False, message="Unauthorized"), 403
+    new_employee = request.form.get("email").strip()
+    if not new_employee:
         return jsonify(success=False, message="No data in payload"), 400
+    registration_link = "http://127.0.0.1:5173/register"
+    
+    body = f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; color: #333;">
+            <h2>Hello!</h2>
+            <p>
+                You have been invited to join <strong>Matt's Appliances Team Portal</strong>.
+            </p>
+            <p>
+                Please follow the link below to register your account.
+            </p>
+            <p>
+                <a href="{registration_link}" target="_blank" 
+                style="background-color:#007BFF;color:white;padding:10px 15px;
+                        text-decoration:none;border-radius:5px;">
+                Register Your Account
+                </a>
+            </p>
+            <br>
+            <p style="font-size: 0.9em;">This invite was sent by {current_user.first_name}.</p>
+        </body>
+    </html>
+    """
+    
+    email = EmailMessage(
+        subject=f"{current_user.first_name} has invited you to join the Matt's Appliances team portal!",
+        body=body,
+        from_email=current_app.config.get("MAIL_DEFAULT_SENDER"),
+        to=[new_employee]
+    )
+    
+    email.content_subtype = "html"
+    try:
+        email.send()
+    except Exception as e:
+        print(f"Error when sending invite link: {e}")
+        return jsonify(success=False, message="Failed to send invite link"), 500
+    
+    return jsonify(success=True, message=f"An invite link has been sent to {new_employee}."), 200
+    
       
     

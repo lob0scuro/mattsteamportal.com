@@ -136,7 +136,10 @@ const EditPostForm = () => {
             <button
               type="button"
               className={styles.deleteImagePreview}
-              onClick={() => setSelectedImage(null)}
+              onClick={() => {
+                if (!confirm("Delete Image?")) return;
+                setSelectedImage(null);
+              }}
             >
               X
             </button>

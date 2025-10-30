@@ -53,7 +53,7 @@ const Post = () => {
 
   return (
     <div className={styles.postPageContainer}>
-      <Link className={styles.createPostButton}>
+      <Link className={styles.createPostButton} to="/post-form">
         {" "}
         <FontAwesomeIcon icon={faSignsPost} />
         Create New Post
