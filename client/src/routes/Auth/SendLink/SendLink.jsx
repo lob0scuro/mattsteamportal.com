@@ -1,5 +1,5 @@
 import styles from "./SendLink.module.css";
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
