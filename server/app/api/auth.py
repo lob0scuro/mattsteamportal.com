@@ -91,7 +91,7 @@ def invite_link():
                 You have been invited to join <strong>Matt's Appliances Team Portal</strong>.
             </p>
             <p>
-                Please follow the link below to register your account.
+                Please follow the link below to register your account!
             </p>
             <p>
                 <a href="{registration_link}" target="_blank" 
