@@ -74,7 +74,7 @@ def invite_link():
     new_employee = data.get("email").strip()
     if not new_employee:
         return jsonify(success=False, message="No data in payload"), 400
-    registration_link = "http://192.168.1.248:5173/register"
+    registration_link = "https://mattsteamportal.com/register"
     
     body = f"""
     <html>
