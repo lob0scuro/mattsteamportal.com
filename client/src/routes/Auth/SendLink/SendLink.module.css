@@ -21,3 +21,13 @@
   height: 32px;
   padding: 4px 6px;
 }
+
+label.adminCheck {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+label.adminCheck input[type="checkbox"] {
+  width: 15px;
+}

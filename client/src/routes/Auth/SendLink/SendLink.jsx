@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const SendLink = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +18,7 @@ const SendLink = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: email }),
+      body: JSON.stringify({ email: email, is_admin: isAdmin }),
     });
     const data = await response.json();
 
@@ -43,6 +44,14 @@ const SendLink = () => {
           required
           placeholder="Enter employee email...."
         />
+        <label className={styles.adminCheck}>
+          Make Admin:
+          <input
+            type="checkbox"
+            checked={isAdmin}
+            onChange={(e) => setIsAdmin(e.target.checked)}
+          />
+        </label>
         <button type="submit">Send</button>
       </form>
     </div>

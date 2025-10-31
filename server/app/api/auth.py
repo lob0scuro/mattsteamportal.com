@@ -10,6 +10,7 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+    admin_flag = request.args.get('admin') == 'true'
     if not data:
         return jsonify(success=False, message="No input data provided"), 400
     username = data.get('username')
@@ -32,6 +33,7 @@ def register():
         last_name=last_name.capitalize(),
         email=email,
         password_hash=password_hash,
+        is_admin=admin_flag
     )
     db.session.add(new_user)
     db.session.commit()
@@ -66,15 +68,20 @@ def hydrate_user():
     user_data = current_user.serialize_basic()
     return jsonify(success=True, user=user_data), 200
 
+
+
+
 @auth_bp.route("/invite_link", methods=["POST"])
 def invite_link():
     if not current_user.is_admin:
         return jsonify(success=False, message="Unauthorized"), 403
     data = request.get_json()
     new_employee = data.get("email").strip()
+    is_admin = data.get("is_admin", False)
+    
     if not new_employee:
         return jsonify(success=False, message="No data in payload"), 400
-    registration_link = "https://mattsteamportal.com/register"
+    registration_link = f"https://mattsteamportal.com/register?admin={is_admin}"
     
     body = f"""
     <html>
