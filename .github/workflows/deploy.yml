@@ -36,7 +36,7 @@ jobs:
           # Build and deploy React frontend
           cd client
           npm ci
-          npm run build
+          VITE_SERVER_URL=https://mattsteamportal.com npm run build
           scp -r dist/* cameron@45.56.74.113:/var/www/mattsteamportal.com/client/dist/
         shell: bash
 
