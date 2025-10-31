@@ -5,4 +5,4 @@ const SERVER_URLS = {
 };
 
 export const SERVER =
-  import.meta.env.VITE_SERVER_URL || "http://localhost:8000/";
+  import.meta.env.VITE_SERVER_URL || "https://mattsteamportal.com";
