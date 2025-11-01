@@ -9,8 +9,10 @@ import { formatDate } from "../../utils/Helpers";
 import { SERVER } from "../../utils/Variables";
 import toast from "react-hot-toast";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../Context/AuthContext";
 
 const Post = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { post_id } = useParams();
   const [post, setPost] = useState({});
@@ -54,11 +56,13 @@ const Post = () => {
 
   return (
     <div className={styles.postPageContainer}>
-      <Link className={styles.createPostButton} to="/post-form">
-        {" "}
-        <FontAwesomeIcon icon={faSignsPost} />
-        Create New Post
-      </Link>
+      {user.is_admin && (
+        <Link className={styles.createPostButton} to="/post-form">
+          {" "}
+          <FontAwesomeIcon icon={faSignsPost} />
+          Create New Post
+        </Link>
+      )}
       <h1>{post.title}</h1>
       {post.file_path && (
         <div className={styles.postImageContainer}>
