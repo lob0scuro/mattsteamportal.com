@@ -76,12 +76,14 @@ const Post = () => {
         <p>{post.author}</p>
         <small>{formatDate(post.created_at)}</small>
       </div>
-      <div className={styles.postControls}>
-        <button onClick={() => navigate(`/edit-post/${post_id}`)}>
-          Edit Post
-        </button>
-        <button onClick={handleDelete}>Delete Post</button>
-      </div>
+      {user.is_admin && (
+        <div className={styles.postControls}>
+          <button onClick={() => navigate(`/edit-post/${post_id}`)}>
+            Edit Post
+          </button>
+          <button onClick={handleDelete}>Delete Post</button>
+        </div>
+      )}
     </div>
   );
 };
