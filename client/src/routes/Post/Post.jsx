@@ -84,6 +84,13 @@ const Post = () => {
           <button onClick={handleDelete}>Delete Post</button>
         </div>
       )}
+      <div className={styles.commentBox}>
+        <h4>Comments</h4>
+        <ul>
+          <li>Comment</li>
+          <li>comment again</li>
+        </ul>
+      </div>
     </div>
   );
 };

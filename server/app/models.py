@@ -18,6 +18,8 @@ class User(db.Model, UserMixin):
 
     # one-to-many: a user can have many posts
     posts = relationship('Post', back_populates='author', lazy=True)
+    comments = relationship('Comment', back_populates='commenter', lazy=True)
+    
 
     def serialize(self):
         return {
@@ -54,6 +56,7 @@ class Post(db.Model):
 
     # many-to-one: each post belongs to one user
     author = relationship('User', back_populates='posts')
+    comments = relationship('Comments', back_populates='post', cascade='all, delete-orphan', lazy=True)
 
     def serialize(self):
         return {
@@ -64,13 +67,8 @@ class Post(db.Model):
             'file_path': self.file_path,
             'author_id': self.author_id,
             'created_at': self.created_at,
-            'author': {
-                'id': self.author.id,
-                'username': self.author.username,
-                'first_name': self.author.first_name,
-                'last_name': self.author.last_name,
-                'email': self.author.email
-            }
+            'author': self.author.serialize_basic(),
+            'comments': [c.serialize() for c in self.comments],
         }
 
     def serialize_basic(self):
@@ -83,4 +81,35 @@ class Post(db.Model):
             'file_path': self.file_path,
             'created_at': self.created_at,
             'author': f"{self.author.first_name} {self.author.last_name[0]}."
+        }
+
+
+class Comments(db.Model):
+    __tablename__ = "comments"
+    
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey("post.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    content = Column(Text, nullable=False)
+    created_on = Column(DateTime, nullable=False, default=func.now())
+    
+    commenter = relationship('User', back_populates='comments')
+    post = relationship('Post', back_populates='comments')
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'post_id': self.post_id,
+            'user_id': self.user_id,
+            'content': self.content,
+            'created_on': self.created_on,
+            'commenter': self.commenter.serialize_basic()
+        }
+        
+    def serialize_basic(self):
+        return {
+            'id': self.id,
+            'content': self.content,
+            'created_on': self.created_on,
+            'commenter': self.commenter.serialize_basic()
         }

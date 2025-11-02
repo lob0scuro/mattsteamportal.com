@@ -70,3 +70,38 @@
 .postControls button:last-child {
   background-color: red;
 }
+
+/*
+COMMENT BOX 
+*/
+
+.commentBox {
+  margin-block: 2rem;
+  border-top: 1px solid #fff;
+  width: 90%;
+  padding-top: 1rem;
+}
+
+.commentBox h4 {
+  text-decoration: underline;
+  margin-bottom: 4px;
+  padding-left: 10px;
+}
+
+.commentBox ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: var(--background);
+  padding: 5px;
+  border-radius: 8px;
+  border: 1px solid var(--textPrimary);
+}
+
+.commentBox ul li {
+  background-color: var(--backgroundDark);
+  padding: 12px 8px;
+  font-size: 14px;
+  border-radius: 8px;
+}
