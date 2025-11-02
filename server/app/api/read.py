@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user    
-from app.models import User, Post
+from app.models import User, Post, Comments
+from sqlalchemy import desc
+
 
 read_bp = Blueprint('read', __name__)
 
@@ -38,7 +40,10 @@ def get_post(id):
     post = Post.query.get(id)
     if not post:
         return jsonify(success=False, message="Could not query post"), 400
-    return jsonify(success=True, post=post.serialize_basic()), 200
+    ordered_comments = Comments.query.filter_by(post_id=post.id).order_by(desc(Comments.created_on)).all()
+    post_data = post.serialize()
+    post_data["comments"] = [c.serialize() for c in ordered_comments]
+    return jsonify(success=True, post=post_data), 200
 
 
 @read_bp.route("/get_posts/<int:page>/<int:limit>", methods=["GET"])

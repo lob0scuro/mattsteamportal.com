@@ -16,6 +16,8 @@ const Post = () => {
   const navigate = useNavigate();
   const { post_id } = useParams();
   const [post, setPost] = useState({});
+  const [commenting, setCommenting] = useState(false);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -54,6 +56,60 @@ const Post = () => {
     }
   };
 
+  const postComment = async (e) => {
+    e.preventDefault();
+    try {
+      const submitPost = await fetch(`/api/create/add_comment/${post_id}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ comment }),
+      });
+      const data = await submitPost.json();
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+      toast.success(data.message);
+
+      setPost((prev) => ({
+        ...prev,
+        comments: prev.comments
+          ? [data.comment, ...prev.comments]
+          : [data.comment],
+      }));
+
+      setComment("");
+      setCommenting(false);
+    } catch (error) {
+      toast.error(error.message);
+      console.error("Error: ", error);
+    }
+  };
+
+  const deleteComment = async (id) => {
+    if (!confirm("Delete comment?")) return;
+    try {
+      const del = await fetch(`/api/delete/delete_comment/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await del.json();
+      if (!data.success) throw new Error(data.message);
+      toast.success(data.message);
+      setPost((prev) => ({
+        ...prev,
+        comments: prev.comments
+          ? prev.comments.filter((comment) => comment.id !== id)
+          : [],
+      }));
+    } catch (error) {
+      toast.error(error.message);
+      console.error("[ERROR]: ", error);
+    }
+  };
+
   return (
     <div className={styles.postPageContainer}>
       {user.is_admin && (
@@ -73,7 +129,9 @@ const Post = () => {
       )}
       <p className={styles.postContentP}>{post.content}</p>
       <div className={styles.postPageFooter}>
-        <p>{post.author}</p>
+        <p>
+          {post.author?.first_name} {post.author?.last_name[0]}.
+        </p>
         <small>{formatDate(post.created_at)}</small>
       </div>
       {user.is_admin && (
@@ -85,10 +143,51 @@ const Post = () => {
         </div>
       )}
       <div className={styles.commentBox}>
-        <h4>Comments</h4>
+        <div>
+          <h4>Comments</h4>
+          <button onClick={() => setCommenting(!commenting)}>
+            {commenting ? "x" : "+"}
+          </button>
+        </div>
         <ul>
-          <li>Comment</li>
-          <li>comment again</li>
+          {commenting && (
+            <li>
+              <form onSubmit={postComment} className={styles.commentForm}>
+                <textarea
+                  name="comment"
+                  id="comment"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                ></textarea>
+                <button type="submit">Post</button>
+              </form>
+            </li>
+          )}
+          {post.comments?.length > 0 ? (
+            post.comments.map(
+              ({ commenter, content, id, created_on, user_id }) => (
+                <li key={id} className={styles.commentLine}>
+                  <div className={styles.commentBody}>
+                    <p>{content}</p>
+                    {user.id === user_id && (
+                      <button
+                        onClick={() => deleteComment(id)}
+                        className={styles.deletePost}
+                      >
+                        X
+                      </button>
+                    )}
+                  </div>
+                  <div className={styles.commentFooter}>
+                    <p>{commenter.username}</p>
+                    <p>{formatDate(created_on)}</p>
+                  </div>
+                </li>
+              )
+            )
+          ) : (
+            <li className={styles.noComments}>No comments on this post yet</li>
+          )}
         </ul>
       </div>
     </div>

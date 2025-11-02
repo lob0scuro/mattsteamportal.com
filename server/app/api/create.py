@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.models import User, Post
+from app.models import User, Post, Comments
 from app.extensions import db
 from flask_login import current_user, login_required
 import os
@@ -81,3 +81,20 @@ def create_post():
         
     
     
+@create_bp.route("/add_comment/<int:post_id>", methods=["POST"])
+@login_required
+def add_comment(post_id):
+    data = request.get_json()
+    comment = data.get("comment")
+    try:
+        new_comment = Comments(
+            post_id=post_id,
+            user_id=current_user.id,
+            content=comment
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        return jsonify(success=True, message="Posted!", comment=new_comment.serialize()), 201
+    except Exception as e:
+        print(f"[ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when posting new comment"), 500

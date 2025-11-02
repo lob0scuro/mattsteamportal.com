@@ -82,10 +82,29 @@ COMMENT BOX
   padding-top: 1rem;
 }
 
+.commentBox div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 10px;
+  margin-bottom: 5px;
+}
+
 .commentBox h4 {
   text-decoration: underline;
-  margin-bottom: 4px;
-  padding-left: 10px;
+}
+
+.commentBox div:first-child button {
+  padding: 4px;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--buttonSecondary);
+  font-size: 1.2rem;
+  font-weight: 600;
+  box-shadow: unset;
 }
 
 .commentBox ul {
@@ -99,9 +118,50 @@ COMMENT BOX
   border: 1px solid var(--textPrimary);
 }
 
+form.commentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+form.commentForm textarea {
+  height: 8rem;
+  font-size: 18px;
+  background-color: var(--inputBackground);
+  color: var(--backgroundDark);
+  padding: 5px;
+}
+form.commentForm button[type="submit"] {
+  background-color: var(--linkText);
+}
+
 .commentBox ul li {
   background-color: var(--backgroundDark);
   padding: 12px 8px;
   font-size: 14px;
   border-radius: 8px;
+}
+
+li.commentLine {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+div.commentBody {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+}
+div.commentBody button.deletePost {
+  color: red;
+  background-color: transparent;
+  font-size: 1rem;
+}
+li.commentLine div.commentFooter p:first-child {
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+li.commentLine div.commentFooter p:last-child {
+  font-size: 0.8rem;
+  color: var(--textSecondary);
 }

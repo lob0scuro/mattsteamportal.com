@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.models import User, Post
+from app.models import User, Post, Comments
 from app.extensions import db
 from flask_login import current_user, login_required
 
@@ -7,6 +7,7 @@ from flask_login import current_user, login_required
 delete_bp = Blueprint("delete", __name__)
 
 @delete_bp.route("/delete_post/<int:id>", methods=["DELETE"])
+@login_required
 def delete_post(id):
     post = Post.query.get(id)
     if not post:
@@ -15,3 +16,16 @@ def delete_post(id):
     db.session.commit()
     return jsonify(success=True, message="Post has been deleted"), 200
 
+
+@delete_bp.route("/delete_comment/<int:id>", methods=["DELETE"])
+@login_required
+def delete_comment(id):
+    comment = Comments.query.get(id)
+    if not comment:
+        return jsonify(success=False, message="Something went wrong when finding comment"), 400
+    if not current_user.is_admin:
+        if comment.user_id != current_user.id:
+            return jsonify(success=False, message="Sorry, you cant delete a comment that wasnt yours."), 403
+    db.session.delete(comment)
+    db.session.commit()
+    return jsonify(success=True, message="Comment has been removed."), 200

@@ -1,6 +1,6 @@
 from app.extensions import db
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Text, DateTime, func
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Text, DateTime, func, desc
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
 
     # one-to-many: a user can have many posts
     posts = relationship('Post', back_populates='author', lazy=True)
-    comments = relationship('Comment', back_populates='commenter', lazy=True)
+    comments = relationship('Comments', back_populates='commenter', lazy=True)
     
 
     def serialize(self):
@@ -68,7 +68,7 @@ class Post(db.Model):
             'author_id': self.author_id,
             'created_at': self.created_at,
             'author': self.author.serialize_basic(),
-            'comments': [c.serialize() for c in self.comments],
+            'comments': [c.serialize_basic() for c in self.comments],
         }
 
     def serialize_basic(self):
@@ -88,8 +88,8 @@ class Comments(db.Model):
     __tablename__ = "comments"
     
     id = Column(Integer, primary_key=True)
-    post_id = Column(Integer, ForeignKey("post.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     content = Column(Text, nullable=False)
     created_on = Column(DateTime, nullable=False, default=func.now())
     
