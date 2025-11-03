@@ -59,13 +59,15 @@
 
 .postControls {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 14px;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
+  width: 100%;
 }
 .postControls button {
-  width: 100%;
+  font-weight: 600;
 }
 .postControls button:last-child {
   background-color: red;
@@ -84,7 +86,7 @@ COMMENT BOX
 
 .commentBox div:first-child {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   padding-inline: 10px;
   margin-bottom: 5px;
@@ -94,14 +96,15 @@ COMMENT BOX
   text-decoration: underline;
 }
 
-.commentBox div:first-child button {
+.commentBox div:first-child button.addPostButton {
   padding: 4px;
   height: 30px;
   width: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--buttonSecondary);
+  background-color: transparent;
+  border: 1px solid var(--textPrimary);
   font-size: 1.2rem;
   font-weight: 600;
   box-shadow: unset;
@@ -111,11 +114,13 @@ COMMENT BOX
   list-style-type: none;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   background-color: var(--background);
-  padding: 5px;
+  padding: 15px 5px 20px 5px;
   border-radius: 8px;
   border: 1px solid var(--textPrimary);
+  max-height: 800px;
+  overflow: auto;
 }
 
 form.commentForm {
@@ -135,7 +140,7 @@ form.commentForm button[type="submit"] {
 }
 
 .commentBox ul li {
-  background-color: var(--backgroundDark);
+  background-color: var(--buttonPrimary);
   padding: 12px 8px;
   font-size: 14px;
   border-radius: 8px;
@@ -146,20 +151,31 @@ li.commentLine {
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+  position: relative;
 }
 div.commentBody {
   display: flex;
   width: 100%;
   align-items: flex-start;
+  background-color: var(--textSecondary);
+  color: var(--textPrimary);
+  min-height: 80px;
+  padding-block: 5px;
+  border-radius: 6px;
 }
 div.commentBody button.deletePost {
   color: red;
   background-color: transparent;
-  font-size: 1rem;
+  font-size: 1.4rem;
+  position: absolute;
+  top: -10px;
+  left: -18px;
+  box-shadow: unset;
 }
 li.commentLine div.commentFooter p:first-child {
   font-weight: 800;
   font-size: 1.1rem;
+  color: var(--linkText);
 }
 li.commentLine div.commentFooter p:last-child {
   font-size: 0.8rem;

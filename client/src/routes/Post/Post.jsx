@@ -1,7 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpRightFromSquare,
+  faCircleXmark,
+  faMinus,
+  faPlus,
   faSignsPost,
+  faSquareXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Post.module.css";
 import React, { useEffect, useState } from "react";
@@ -134,7 +138,7 @@ const Post = () => {
         </p>
         <small>{formatDate(post.created_at)}</small>
       </div>
-      {user.is_admin && (
+      {user.is_admin && user.id === post.author_id && (
         <div className={styles.postControls}>
           <button onClick={() => navigate(`/edit-post/${post_id}`)}>
             Edit Post
@@ -145,8 +149,15 @@ const Post = () => {
       <div className={styles.commentBox}>
         <div>
           <h4>Comments</h4>
-          <button onClick={() => setCommenting(!commenting)}>
-            {commenting ? "x" : "+"}
+          <button
+            className={styles.addPostButton}
+            onClick={() => setCommenting(!commenting)}
+          >
+            {commenting ? (
+              <FontAwesomeIcon icon={faMinus} />
+            ) : (
+              <FontAwesomeIcon icon={faPlus} />
+            )}
           </button>
         </div>
         <ul>
@@ -174,7 +185,7 @@ const Post = () => {
                         onClick={() => deleteComment(id)}
                         className={styles.deletePost}
                       >
-                        X
+                        <FontAwesomeIcon icon={faCircleXmark} />
                       </button>
                     )}
                   </div>
