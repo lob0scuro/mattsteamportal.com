@@ -1,11 +1,7 @@
 .thisWeeksSchedule {
   text-align: center;
   text-decoration: underline;
-}
-.scheduleSubHeader {
-  font-size: 0.6rem;
-  text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 }
 
 .noSchedulesYet {
@@ -28,9 +24,23 @@
   align-items: center;
   width: 100%;
   height: auto;
+  position: relative;
 }
 
 .scheduleImage {
-  width: 100px;
+  width: 100%;
   height: auto;
+}
+
+.expandButton {
+  height: 30px;
+  font-size: 0.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #00000096;
 }

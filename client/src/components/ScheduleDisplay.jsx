@@ -25,7 +25,6 @@ const ScheduleDisplay = () => {
   return (
     <>
       <h3 className={styles.thisWeeksSchedule}>This weeks Schedule</h3>
-      <p className={styles.scheduleSubHeader}>** tap image to expand **</p>
       <div className={styles.scheduleDisplayContainer}>
         {schedules?.length === 3 ? (
           schedules?.map(({ id, title, file_path }) => (
@@ -40,6 +39,7 @@ const ScheduleDisplay = () => {
                 alt="Employee Schedule"
                 className={styles.scheduleImage}
               />
+              <p className={styles.expandButton}>**click to expand</p>
             </div>
           ))
         ) : (

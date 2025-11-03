@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./Home.module.css";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../Context/AuthContext";
@@ -6,6 +7,7 @@ import toast from "react-hot-toast";
 import { formatDate } from "../../utils/Helpers";
 import { SERVER } from "../../utils/Variables";
 import ScheduleDisplay from "../../components/ScheduleDisplay";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   const { user } = useAuth();
@@ -60,7 +62,11 @@ const Home = () => {
               <option value="notice">Notice</option>
             </select>
           </div>
-          {user.is_admin && <Link to={"/post-form"}>+</Link>}
+          {user.is_admin && (
+            <Link to={"/post-form"}>
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+            </Link>
+          )}
         </div>
         <ul className={styles.postBoard}>
           {posts?.length === 0 ? (
