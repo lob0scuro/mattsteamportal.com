@@ -80,6 +80,7 @@ const Home = () => {
                 created_at,
                 category,
                 author,
+                username,
                 file_path,
               }) => (
                 <li key={id} onClick={() => handlePostClick(id)}>
@@ -95,7 +96,7 @@ const Home = () => {
                     )}
                   </div>
                   <p className={styles.postHomeFooter}>
-                    <b>{author}</b>
+                    <b>{username}</b>
                     <span>{formatDate(created_at)}</span>
                   </p>
                 </li>

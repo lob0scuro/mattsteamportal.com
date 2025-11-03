@@ -83,7 +83,8 @@ class Post(db.Model):
             'file_path': self.file_path,
             'created_at': self.created_at,
             'author': f"{self.author.first_name} {self.author.last_name[0]}.",
-            'schedule_week': self.schedule_week
+            'schedule_week': self.schedule_week,
+            'username': self.author.username
         }
 
 
