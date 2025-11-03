@@ -53,6 +53,7 @@ class Post(db.Model):
     file_path = Column(String(300), nullable=True)
     created_at = Column(DateTime, default=func.now())
     author_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    schedule_week = Column(DateTime, nullable=True)
 
     # many-to-one: each post belongs to one user
     author = relationship('User', back_populates='posts')
@@ -69,6 +70,7 @@ class Post(db.Model):
             'created_at': self.created_at,
             'author': self.author.serialize_basic(),
             'comments': [c.serialize_basic() for c in self.comments],
+            'schedule_week': self.schedule_week
         }
 
     def serialize_basic(self):
@@ -80,7 +82,8 @@ class Post(db.Model):
             'category': self.category,
             'file_path': self.file_path,
             'created_at': self.created_at,
-            'author': f"{self.author.first_name} {self.author.last_name[0]}."
+            'author': f"{self.author.first_name} {self.author.last_name[0]}.",
+            'schedule_week': self.schedule_week
         }
 
 

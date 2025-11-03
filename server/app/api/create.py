@@ -6,6 +6,7 @@ import os
 from werkzeug.utils import secure_filename
 from pdf2image import convert_from_path
 import platform
+from datetime import datetime
 
 
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
@@ -24,6 +25,12 @@ def create_post():
     title = request.form.get("title").strip()
     content = request.form.get("content", "").strip()
     category = request.form.get("category", "general").strip()
+    schedule_week = request.form.get('schedule_week') or None
+    date_obj = None
+    
+    if schedule_week:
+        date_obj = datetime.strptime(schedule_week, "%Y-%m-%d")
+    
     
     file = request.files.get("upload")
     file_path = None
@@ -68,7 +75,8 @@ def create_post():
         content=content,
         category=category,
         file_path=file_path,
-        author_id=current_user.id
+        author_id=current_user.id,
+        schedule_week=date_obj
         )
         db.session.add(post)
         db.session.commit()

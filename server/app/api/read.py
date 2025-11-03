@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user    
 from app.models import User, Post, Comments
 from sqlalchemy import desc
+from datetime import datetime, timedelta
 
 
 read_bp = Blueprint('read', __name__)
@@ -59,3 +60,22 @@ def get_posts(page, limit):
         posts=[p.serialize_basic() for p in posts],
         message="No posts found" if not posts else "Posts retrieved successfully"
         ), 200
+
+
+@read_bp.route("/get_schedules", methods=["GET"])
+@login_required
+def get_schedules():
+    today = datetime.today()
+    monday = today - timedelta(days=today.weekday())
+    monday = monday.replace(hour=0, minute=0, second=0, microsecond=0)
+    
+    try:
+        weekly_posts = (
+            Post.query.filter(Post.category == 'schedule').filter(Post.schedule_week == monday).order_by(Post.created_at.asc()).all()
+        )
+        if not weekly_posts:
+            return jsonify(success=True, message="No schedules have been posted yet", schedules=[])
+        
+        return jsonify(success=True, schedules=[p.serialize_basic() for p in weekly_posts]), 200
+    except Exception as e:
+        return jsonify(success=False, message="There was an error when querying for this weeks schedules."), 500
