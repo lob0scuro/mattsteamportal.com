@@ -1,12 +1,21 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort
 from flask_login import login_required, current_user    
 from app.models import User, Post, Comments
 from sqlalchemy import desc
 from datetime import datetime, timedelta
+import json
+import platform
 
 
 read_bp = Blueprint('read', __name__)
-
+if platform.system() == "windows": 
+    directory_path = "C:\\Users\\matts\\OneDrive\\Documents\\Cameron\\employees.json"
+else:
+    directory_path = "/home/cameron/employees.json"
+    
+def load_employee_data():   
+    with open("C:\\Users\\matts\\OneDrive\\Documents\\Cameron\\employees.json") as f:
+        return json.load(f)
 
 
 ########################
@@ -83,3 +92,19 @@ def get_schedules():
         return jsonify(success=True, schedules=[p.serialize_basic() for p in weekly_posts]), 200
     except Exception as e:
         return jsonify(success=False, message="There was an error when querying for this weeks schedules."), 500
+    
+
+@read_bp.route("/employee_directory", methods=["GET"])
+@login_required
+def employee_directory():
+    if not current_user.is_admin:
+        return jsonify(success=False, message="Forbidden"), 403
+    try:
+        employee_data = load_employee_data()
+    except FileNotFoundError as e:
+        print(f"[ERROR]: {e}")
+        return jsonify(success=False, message="Employee data file not found"), 500
+    except json.JSONDecodeError as je:
+        print(f"[ERROR]: {je}")
+        return jsonify(success=False, message="Employee data is corrupted"), 500
+    return jsonify(success=True, employees=employee_data), 200

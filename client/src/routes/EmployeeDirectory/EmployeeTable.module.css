@@ -1,0 +1,40 @@
+.tableContainer {
+  width: 100%;
+}
+
+table.employeeMainTable {
+  background-color: var(--backgroundDark);
+  /* flex: 3; */
+  overflow-y: auto;
+  height: 200px;
+  width: 100%;
+}
+
+table.employeeMainTable thead th {
+  text-align: start;
+  font-size: 16px;
+  background-color: var(--linkText);
+  padding: 10px 0 10px 4px;
+}
+
+table.employeeMainTable td {
+  padding: 15px 5px;
+  font-size: 16px;
+}
+table.employeeMainTable tr:nth-child(even) {
+  background-color: #282828;
+}
+table.employeeMainTable tr:hover {
+  background-color: var(--textSecondary);
+}
+
+.missing {
+  color: red;
+  font-style: italic;
+}
+
+.sum {
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 5rem;
+}

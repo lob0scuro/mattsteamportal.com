@@ -17,6 +17,7 @@ import PostForm from "./routes/PostForm/PostForm.jsx";
 import Post from "./routes/Post/Post.jsx";
 import EditPostForm from "./routes/PostForm/EditPostForm.jsx";
 import SendLink from "./routes/Auth/SendLink/SendLink.jsx";
+import DirectoryHome from "./routes/EmployeeDirectory/DirectoryHome.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="post-form" element={<PostForm />} />
             <Route path="edit-post/:post_id" element={<EditPostForm />} />
             <Route path="send-invite-link" element={<SendLink />} />
+            <Route path="employee-directory" element={<DirectoryHome />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />} />

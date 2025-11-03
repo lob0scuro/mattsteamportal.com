@@ -39,3 +39,9 @@ export function formatDate(dateString) {
 
   return `${dayName}, ${monthName} ${day}${suffix(day)} ${year}`;
 }
+
+export const cell = (num) => {
+  if (num.length !== 10) return;
+
+  return `(${num.slice(0, 3)}) ${num.slice(3, 6)}-${num.slice(6)}`;
+};

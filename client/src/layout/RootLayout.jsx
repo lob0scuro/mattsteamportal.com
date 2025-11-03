@@ -39,9 +39,14 @@ const RootLayout = () => {
           <>
             <button onClick={logout}>LOGOUT</button>
             {user.is_admin && (
-              <Link to={"/send-invite-link"} className="registration-link">
-                Send Registration Link
-              </Link>
+              <>
+                <Link to={"/send-invite-link"} className="registration-link">
+                  Send Registration Link
+                </Link>
+                <Link to={"/employee-directory"} className="registration-link">
+                  Employee Directory
+                </Link>
+              </>
             )}
           </>
         )}
