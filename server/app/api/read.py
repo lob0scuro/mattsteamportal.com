@@ -47,12 +47,16 @@ def get_post(id):
     return jsonify(success=True, post=post_data), 200
 
 
-@read_bp.route("/get_posts/<int:page>/<int:limit>", methods=["GET"])
-def get_posts(page, limit):
+@read_bp.route("/get_posts/<category>/<int:page>/<int:limit>", methods=["GET"])
+def get_posts(category, page, limit):
     page = max(page, 1)
     offset = (page - 1) * limit
     limit = int(limit)
-    posts = Post.query.order_by(Post.created_at.desc()).offset(offset).limit(limit).all()
+    
+    query = Post.query
+    if category.lower() != "all":
+        query = query.filter_by(category=category)
+    posts = query.order_by(Post.created_at.desc()).offset(offset).limit(limit).all()
     return jsonify(
         success=True, 
         page=page, 

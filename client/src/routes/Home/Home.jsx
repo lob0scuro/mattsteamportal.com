@@ -12,11 +12,14 @@ const Home = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`/api/read/get_posts/${page}/10`);
+        const response = await fetch(
+          `/api/read/get_posts/${selectedCategory}/${page}/10`
+        );
         const data = await response.json();
         if (data.posts.length === 0) {
           setPosts([]);
@@ -29,7 +32,7 @@ const Home = () => {
       }
     };
     fetchPosts();
-  }, [page]);
+  }, [page, selectedCategory]);
 
   const handlePostClick = (id) => {
     navigate(`/post/${id}`);
@@ -40,7 +43,23 @@ const Home = () => {
       <div className={styles.postBoardContainer}>
         <ScheduleDisplay />
         <div className={styles.postBoardHeader}>
-          <h4>Recent Posts</h4>
+          <div style={{ width: "100%" }}>
+            <p>View posts by category</p>
+            <select
+              name="category-select"
+              id="category-select"
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="all">All</option>
+              <option value="schedule">Schedule</option>
+              <option value="memo">Memo</option>
+              <option value="notice">Notice</option>
+            </select>
+          </div>
           {user.is_admin && <Link to={"/post-form"}>+</Link>}
         </div>
         <ul className={styles.postBoard}>
