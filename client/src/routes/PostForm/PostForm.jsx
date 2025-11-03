@@ -101,7 +101,9 @@ const PostForm = () => {
           </div>
         )}
         <div>
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title">
+            {formData.category === "schedule" ? "Team" : "Title"}
+          </label>
           <input
             type="text"
             name="title"
