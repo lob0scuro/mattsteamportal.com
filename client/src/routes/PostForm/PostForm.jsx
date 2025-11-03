@@ -11,6 +11,7 @@ const PostForm = () => {
     category: "",
     title: "",
     content: "",
+    schedule_week: "",
   });
 
   const handleChange = (e) => {
@@ -38,7 +39,10 @@ const PostForm = () => {
     inputs.append("title", formData.title);
     inputs.append("category", formData.category);
     inputs.append("content", formData.content);
+
     if (file) inputs.append("upload", file);
+    if (formData.schedule_week)
+      inputs.append("schedule_week", formData.schedule_week);
     try {
       const response = await fetch("/api/create/create_post", {
         method: "POST",
@@ -54,6 +58,7 @@ const PostForm = () => {
         category: "",
         title: "",
         content: "",
+        schedule_week: "",
       });
       setFile(null);
       setSelectedImage(null);
@@ -75,6 +80,7 @@ const PostForm = () => {
             id="category"
             value={formData.category}
             onChange={handleChange}
+            required
           >
             <option value="">--Select Category--</option>
             <option value="notice">Notice</option>
@@ -82,6 +88,18 @@ const PostForm = () => {
             <option value="schedule">Schedule</option>
           </select>
         </div>
+        {formData.category === "schedule" && (
+          <div>
+            <label htmlFor="schedule_week">Week Of</label>
+            <input
+              type="date"
+              name="schedule_week"
+              id="schedule_week"
+              value={formData.schedule_week}
+              onChange={handleChange}
+            />
+          </div>
+        )}
         <div>
           <label htmlFor="title">Title</label>
           <input
@@ -90,8 +108,10 @@ const PostForm = () => {
             id="title"
             value={formData.title}
             onChange={handleChange}
+            required
           />
         </div>
+
         <div>
           <label htmlFor="upload" className={styles.imageLabel}>
             Upload Image

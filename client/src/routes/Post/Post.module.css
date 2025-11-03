@@ -140,7 +140,8 @@ form.commentForm button[type="submit"] {
 }
 
 .commentBox ul li {
-  background-color: var(--buttonPrimary);
+  background-color: var(--backgroundDark);
+  border: 1px solid var(--textPrimary);
   padding: 12px 8px;
   font-size: 14px;
   border-radius: 8px;

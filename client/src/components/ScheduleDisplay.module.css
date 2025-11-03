@@ -1,0 +1,36 @@
+.thisWeeksSchedule {
+  text-align: center;
+  text-decoration: underline;
+}
+.scheduleSubHeader {
+  font-size: 0.6rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.noSchedulesYet {
+  text-align: center;
+  font-style: italic;
+}
+
+.scheduleDisplayContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 15px;
+  width: 100%;
+  margin-bottom: 4rem;
+}
+
+.scheduleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: auto;
+}
+
+.scheduleImage {
+  width: 100px;
+  height: auto;
+}

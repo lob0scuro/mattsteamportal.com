@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { formatDate } from "../../utils/Helpers";
 import { SERVER } from "../../utils/Variables";
+import ScheduleDisplay from "../../components/ScheduleDisplay";
 
 const Home = () => {
   const { user } = useAuth();
@@ -37,6 +38,7 @@ const Home = () => {
   return (
     <>
       <div className={styles.postBoardContainer}>
+        <ScheduleDisplay />
         <div className={styles.postBoardHeader}>
           <h4>Recent Posts</h4>
           {user.is_admin && <Link to={"/post-form"}>+</Link>}
