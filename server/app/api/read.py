@@ -8,13 +8,13 @@ import platform
 
 
 read_bp = Blueprint('read', __name__)
-if platform.system() == "windows": 
+if platform.system() == "Windows": 
     directory_path = "C:\\Users\\matts\\OneDrive\\Documents\\Cameron\\employees.json"
 else:
     directory_path = "/home/cameron/employees.json"
     
 def load_employee_data():   
-    with open("C:\\Users\\matts\\OneDrive\\Documents\\Cameron\\employees.json") as f:
+    with open(directory_path) as f:
         return json.load(f)
 
 
