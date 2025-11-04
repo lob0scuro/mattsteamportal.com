@@ -96,7 +96,17 @@ const PostForm = () => {
               name="schedule_week"
               id="schedule_week"
               value={formData.schedule_week}
-              onChange={handleChange}
+              onChange={(e) => {
+                const selected = new Date(e.target.value);
+                const day = selected.getUTCDay();
+                if (day !== 1) {
+                  toast.error("Please select a Monday");
+                  setFormData({ ...formData, schedule_week: "" });
+                  return;
+                }
+                handleChange(e);
+              }}
+              required
             />
           </div>
         )}
@@ -104,14 +114,28 @@ const PostForm = () => {
           <label htmlFor="title">
             {formData.category === "schedule" ? "Team" : "Title"}
           </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
+          {formData.category === "schedule" ? (
+            <select
+              name="title"
+              id="title"
+              value={formData.title}
+              onChange={handleChange}
+            >
+              <option value="">--select team---</option>
+              <option value="Sales">Sales</option>
+              <option value="Cleaners">Cleaners</option>
+              <option value="Techs">Techs</option>
+            </select>
+          ) : (
+            <input
+              type="text"
+              name="title"
+              id="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+            />
+          )}
         </div>
 
         <div>
