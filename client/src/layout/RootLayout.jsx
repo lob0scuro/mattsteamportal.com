@@ -35,7 +35,7 @@ const RootLayout = () => {
       </div>
       <Toaster position="bottom-right" reverseOrder={false} />
       <footer>
-        {user && (
+        {user ? (
           <>
             <button onClick={logout}>LOGOUT</button>
             {user.is_admin && (
@@ -49,6 +49,10 @@ const RootLayout = () => {
               </>
             )}
           </>
+        ) : (
+          <Link to={"request-password-reset"} className="registration-link">
+            Forgot Password?
+          </Link>
         )}
 
         <p>© 2025 Matt's Appliances</p>

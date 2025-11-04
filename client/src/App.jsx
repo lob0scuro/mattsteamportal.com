@@ -18,6 +18,8 @@ import Post from "./routes/Post/Post.jsx";
 import EditPostForm from "./routes/PostForm/EditPostForm.jsx";
 import SendLink from "./routes/Auth/SendLink/SendLink.jsx";
 import DirectoryHome from "./routes/EmployeeDirectory/DirectoryHome.jsx";
+import ForgotPassword from "./routes/Auth/Password/ForgotPassword/ForgotPassword.jsx";
+import ResetPassword from "./routes/Auth/Password/ResetPassword/ResetPassword.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -35,6 +37,8 @@ const App = () => {
         </Route>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="request-password-reset" element={<ForgotPassword />} />
+        <Route path="reset_password/:token" element={<ResetPassword />} />
       </Route>
     )
   );

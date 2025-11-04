@@ -3,9 +3,24 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db, bcrypt
 from app.models import User
 from flask_mailman import EmailMessage
+from itsdangerous import URLSafeTimedSerializer
 
 
 auth_bp = Blueprint('auth', __name__)
+
+def generate_reset_token(email):
+    s = URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
+    return s.dumps(email, salt='password-reset-salt')
+
+def verify_reset_token(token, expiration=1800): #30 minutes
+    s = URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
+    try:
+        email = s.loads(token, salt='password-reset-salt', max_age=expiration)
+    except Exception:
+        return None
+    return email
+
+
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -123,4 +138,44 @@ def invite_link():
     return jsonify(success=True, message=f"An invite link has been sent to {new_employee}."), 200
     
       
+    
+@auth_bp.route("/request_password_reset", methods=["POST"])
+def request_password_reset():
+    data = request.get_json()
+    email = data.get("email")
+    user = User.query.filter_by(email=email).first()
+    
+    if not user:
+        return jsonify(success=False, message="No user with that email found."), 404
+    
+    token = generate_reset_token(user.email)
+    reset_url = f"https://mattsteamportal.com/reset_password/{token}"
+    
+    message = EmailMessage(
+        subject="Password Reset Request",
+        body=f"Click the link to reset your password:\n\n{reset_url}",
+        to=[user.email]
+    )
+    message.send()
+    
+    return jsonify(success=True, message=f"Password reset has been sent to: {email}"), 200
+
+@auth_bp.route("/reset_password/<token>", methods=["POST"])
+def reset_password(token):
+    data = request.get_json()
+    new_password = data.get("password")
+    email = verify_reset_token(token)
+    
+    if not email:
+        return jsonify(success=False, message="Invalid or expired token."), 400
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify(success=False, message="User not found"), 404
+    
+    hashed_pw = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    user.password_hash = hashed_pw
+    db.session.commit()
+    
+    return jsonify(success=True, message="Your password has been reset!"), 200
     
