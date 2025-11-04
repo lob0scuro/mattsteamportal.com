@@ -73,16 +73,7 @@ const Home = () => {
             <li className={styles.noPost}>No posts to show</li>
           ) : (
             posts?.map(
-              ({
-                id,
-                title,
-                content,
-                created_at,
-                category,
-                author,
-                username,
-                file_path,
-              }) => (
+              ({ id, title, content, created_at, username, file_path }) => (
                 <li key={id} onClick={() => handlePostClick(id)}>
                   <h3>{title}</h3>
                   <div>

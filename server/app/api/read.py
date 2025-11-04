@@ -86,8 +86,21 @@ def get_schedules():
         weekly_posts = (
             Post.query.filter(Post.category == 'schedule').filter(Post.schedule_week == monday).order_by(Post.created_at.asc()).all()
         )
+        
+        expected_teams = {"Sales", "Cleaners", "Techs"}
+        found_teams = {p.title for p in weekly_posts}
+        
+        missing = expected_teams - found_teams
+        
         if not weekly_posts:
             return jsonify(success=True, message="No schedules have been posted yet", schedules=[])
+        
+        if missing:
+            return jsonify(
+                success=True,
+                message=f"Schedules incomplete - missing: {','.join(missing)}",
+                schedules=[p.serialize_basic() for p in weekly_posts],
+            ), 200
         
         return jsonify(success=True, schedules=[p.serialize_basic() for p in weekly_posts]), 200
     except Exception as e:

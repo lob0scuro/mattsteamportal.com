@@ -35,6 +35,15 @@ def create_post():
     file = request.files.get("upload")
     file_path = None
     
+    existing = Post.query.filter_by(
+        category='schedule',
+        title=title,
+        schedule_week=schedule_week
+    ).first()
+    
+    if existing:
+        return jsonify(success=False, message="Schedule already exists for this team on this week"), 400
+    
     if file and allowed_file(file.filename):
         safe_filename = secure_filename(file.filename)
         upload_folder = current_app.config["UPLOAD_FOLDER"]
