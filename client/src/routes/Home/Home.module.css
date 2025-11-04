@@ -1,5 +1,6 @@
 .postBoardContainer {
   width: 90%;
+  max-width: 800px;
 }
 
 div.postBoardHeader {
@@ -26,51 +27,74 @@ ul.postBoard {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 8px;
+  padding: 24px 8px;
   border: none;
   box-shadow: -1px 1px 5px #000;
   border-radius: 12px;
-  margin-top: 0.5rem;
+  margin-top: 2rem;
   margin-bottom: 3rem;
   max-height: 100rem;
   overflow: auto;
+  max-width: 800px;
 }
 
 ul.postBoard li {
   background-color: var(--background);
   padding: 4px;
   border-radius: 8px;
-  padding-top: 20px;
   padding-inline: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }
 
 ul.postBoard li h3 {
-  margin-bottom: 10px;
-  text-align: center;
+  margin-bottom: 5px;
+  font-size: 1.2rem;
+}
+
+.postDate {
+  font-style: italic;
+}
+.postAuthor {
+  color: var(--textSecondary);
 }
 
 ul.postBoard li.noPost {
   background-color: var(--backgroundDark);
 }
 
-ul.postBoard li div {
-  width: 100%;
+ul.postBoard li div:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 img.postImage {
-  width: 80%;
+  width: 60px;
   height: auto;
   object-fit: cover;
   margin-top: 1rem;
 }
 
-.postHomeFooter {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 10px;
-  margin-top: 20px;
+.categoryTag {
+  position: absolute;
+  top: -10px;
+  right: 5px;
+  z-index: 100;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.6rem;
 }
-.postHomeFooter span {
-  color: var(--textSecondary);
+
+.schedulePost {
+  background-color: rgba(14, 14, 87, 0.822);
+}
+.memoPost {
+  background-color: rgba(218, 218, 67, 0.836);
+}
+.noticePost {
+  background-color: rgba(141, 33, 33, 0.774);
 }

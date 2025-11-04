@@ -8,6 +8,7 @@ import { formatDate } from "../../utils/Helpers";
 import { SERVER } from "../../utils/Variables";
 import ScheduleDisplay from "../../components/ScheduleDisplay";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import clsx from "clsx";
 
 const Home = () => {
   const { user } = useAuth();
@@ -42,8 +43,8 @@ const Home = () => {
 
   return (
     <>
+      <ScheduleDisplay />
       <div className={styles.postBoardContainer}>
-        <ScheduleDisplay />
         <div className={styles.postBoardHeader}>
           <div style={{ width: "100%" }}>
             <p>View posts by category</p>
@@ -73,11 +74,14 @@ const Home = () => {
             <li className={styles.noPost}>No posts to show</li>
           ) : (
             posts?.map(
-              ({ id, title, content, created_at, username, file_path }) => (
+              ({ id, title, created_at, username, file_path, category }) => (
                 <li key={id} onClick={() => handlePostClick(id)}>
-                  <h3>{title}</h3>
                   <div>
-                    <p>{content}</p>
+                    <h3>{title}</h3>
+                    <p className={styles.postDate}>{formatDate(created_at)}</p>
+                    <p className={styles.postAuthor}>{username}</p>
+                  </div>
+                  <div>
                     {file_path && (
                       <img
                         className={styles.postImage}
@@ -86,10 +90,16 @@ const Home = () => {
                       />
                     )}
                   </div>
-                  <p className={styles.postHomeFooter}>
-                    <b>{username}</b>
-                    <span>{formatDate(created_at)}</span>
-                  </p>
+                  <small
+                    className={clsx(
+                      styles.categoryTag,
+                      category === "schedule" && styles.schedulePost,
+                      category === "memo" && styles.memoPost,
+                      category === "notice" && styles.noticePost
+                    )}
+                  >
+                    {category}
+                  </small>
                 </li>
               )
             )
