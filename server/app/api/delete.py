@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from app.models import User, Post, Comments
 from app.extensions import db
 from flask_login import current_user, login_required
@@ -14,6 +14,8 @@ def delete_post(id):
         return jsonify(success=False, message="Could not query post, please try again."), 400
     db.session.delete(post)
     db.session.commit()
+    
+    current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has deleted post #{id}")
     return jsonify(success=True, message="Post has been deleted"), 200
 
 
@@ -28,4 +30,6 @@ def delete_comment(id):
             return jsonify(success=False, message="Sorry, you cant delete a comment that wasnt yours."), 403
     db.session.delete(comment)
     db.session.commit()
+    
+    current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has deleted comment #{id}")
     return jsonify(success=True, message="Comment has been removed."), 200

@@ -90,10 +90,11 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         
+        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created a post.")
         return jsonify(success=True, message="Post has been successfully created!", post_id=post.id), 201
     except Exception as e:
         db.session.rollback()
-        print(f"Error when uploading new post: {e}")
+        current_app.logger.error(f"[POST ERROR]: {e}")
         return jsonify(success=False, message=f"There was an error when submitting new post"), 500
         
     
@@ -111,7 +112,9 @@ def add_comment(post_id):
         )
         db.session.add(new_comment)
         db.session.commit()
+        
+        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has commented on a post.")
         return jsonify(success=True, message="Posted!", comment=new_comment.serialize()), 201
     except Exception as e:
-        print(f"[ERROR]: {e}")
+        current_app.logger.error(f"[COMMENT ERROR]: {e}")
         return jsonify(success=False, message="There was an error when posting new comment"), 500

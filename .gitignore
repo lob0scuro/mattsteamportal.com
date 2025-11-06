@@ -10,6 +10,7 @@ server/__pycache__/
 server/app/__pycache__/
 server/app/api/__pycache__/
 server/uploads/
+server/app/logs/
 
 client/.env.local
 client/.env.production

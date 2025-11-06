@@ -1,10 +1,18 @@
 from flask import Flask, send_from_directory
 from config import Config
 from app.extensions import db, migrate, login_manager, cors, mail, bcrypt
+from app.logger import setup_logger
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    
+    #log setup
+    logger = setup_logger("team_portal")
+    app.logger.handlers = logger.handlers
+    app.logger.setLevel(logger.level)
+    
+    app.logger.info("Team Portal has been intialized")
 
     # Initialize extensions here (e.g., database, migrations)
     db.init_app(app)

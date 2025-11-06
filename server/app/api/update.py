@@ -74,9 +74,11 @@ def update_post(id):
     
     try:
         db.session.commit()
+        
+        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has edited post #{post.id}")
         return jsonify(success=True, message="Post updated successfully"), 200
     except Exception as e:
         db.session.rollback()
-        print(f"Error updating post: {e}")
+        current_app.logger.error(f"[POST UPDATE ERROR]: {e}")
         return jsonify(success=False, message="There was an error when updating post"), 500
     

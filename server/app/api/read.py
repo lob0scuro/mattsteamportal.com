@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request, abort, current_app
 from flask_login import login_required, current_user    
 from app.models import User, Post, Comments
 from sqlalchemy import desc
@@ -8,6 +8,8 @@ import platform
 
 
 read_bp = Blueprint('read', __name__)
+
+
 if platform.system() == "Windows": 
     directory_path = "C:\\Users\\matts\\OneDrive\\Documents\\Cameron\\employees.json"
 else:
@@ -53,6 +55,8 @@ def get_post(id):
     ordered_comments = Comments.query.filter_by(post_id=post.id).order_by(desc(Comments.created_on)).all()
     post_data = post.serialize()
     post_data["comments"] = [c.serialize() for c in ordered_comments]
+    
+    current_app.logger.info(f"{current_user.first_name} {current_user.last_name} viewed post '{post.title}'")
     return jsonify(success=True, post=post_data), 200
 
 

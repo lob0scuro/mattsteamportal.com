@@ -53,6 +53,7 @@ def register():
     db.session.add(new_user)
     db.session.commit()
     
+    current_app.logger.info(f"{new_user.first_name} {new_user.last_name} has been registered.")
     return jsonify(success=True, message="User registered successfully"), 201
 
 
@@ -66,6 +67,7 @@ def login():
     if user and bcrypt.check_password_hash(user.password_hash, password):
         login_user(user)
         return jsonify(success=True, message=f"{user.first_name} has been logged in", user=user.serialize_basic()), 200
+    current_app.logger.info(f"{user.first_name} {user.last_name} logged in.")
     return jsonify(success=False, message="Invalid credentials"), 401
 
 
@@ -132,9 +134,11 @@ def invite_link():
     try:
         email.send()
     except Exception as e:
+        current_app.logger.error(f"Error when sending invite link: {e}")
         print(f"Error when sending invite link: {e}")
         return jsonify(success=False, message="Failed to send invite link"), 500
     
+    current_app.logger.info(f"An invite link has been sent to {email}")
     return jsonify(success=True, message=f"An invite link has been sent to {new_employee}."), 200
     
       
@@ -158,6 +162,7 @@ def request_password_reset():
     )
     message.send()
     
+    current_app.logger.info(f"{user.first_name} {user.last_name} has requested a password reset, A request has been sent to: {email}")
     return jsonify(success=True, message=f"Password reset has been sent to: {email}"), 200
 
 @auth_bp.route("/reset_password/<token>", methods=["POST"])
@@ -177,5 +182,6 @@ def reset_password(token):
     user.password_hash = hashed_pw
     db.session.commit()
     
+    current_app.logger.info(f"{user.first_name} {user.last_name} has reset their password")
     return jsonify(success=True, message="Your password has been reset!"), 200
     
