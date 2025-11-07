@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from pdf2image import convert_from_path
 import platform
 from datetime import datetime
+from flask_mailman import EmailMessage
 
 
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
@@ -91,6 +92,16 @@ def create_post():
         db.session.commit()
         
         current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created a post.")
+
+        users = User.query.all()
+        
+        for user in users:
+            EmailMessage(
+                subject=f"New Team Portal Post from {current_user.username}!",
+                body=f"Hey {user.username}, {current_user.username} has just posted on mattsteamportal.com",
+                to=[user.email],
+            ).send()
+            
         return jsonify(success=True, message="Post has been successfully created!", post_id=post.id), 201
     except Exception as e:
         db.session.rollback()

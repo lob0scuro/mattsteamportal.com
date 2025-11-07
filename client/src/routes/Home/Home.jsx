@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { formatDate } from "../../utils/Helpers";
 import { SERVER } from "../../utils/Variables";
 import ScheduleDisplay from "../../components/ScheduleDisplay";
-import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
 
 const Home = () => {
@@ -65,7 +65,7 @@ const Home = () => {
           </div>
           {user.is_admin && (
             <Link to={"/post-form"}>
-              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+              <FontAwesomeIcon icon={faSquarePlus} />
             </Link>
           )}
         </div>
