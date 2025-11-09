@@ -83,13 +83,15 @@ def get_posts(category, page, limit):
 @login_required
 def get_schedules():
     today = datetime.today()
-    sunday_index = (today.weekday() + 1) % 7
-    sunday = today - timedelta(days=sunday_index)
-    sunday = sunday.replace(hour=0, minute=0, second=0, microsecond=0)
+    monday = today - timedelta(days=today.weekday())
+    monday = monday.replace(hour=0, minute=0, second=0, microsecond=0)
+    
+    if today.weekday() == 6:
+        monday += timedelta(days=7)
     
     try:
         weekly_posts = (
-            Post.query.filter(Post.category == 'schedule').filter(Post.schedule_week == sunday).order_by(Post.created_at.asc()).all()
+            Post.query.filter(Post.category == 'schedule').filter(Post.schedule_week == monday).order_by(Post.created_at.asc()).all()
         )
         
         expected_teams = {"Sales", "Cleaners", "Techs"}
