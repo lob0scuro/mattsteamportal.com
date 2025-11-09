@@ -91,7 +91,7 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         
-        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created a post.")
+        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created a post '{post.title}'")
 
         users = User.query.all()
         
