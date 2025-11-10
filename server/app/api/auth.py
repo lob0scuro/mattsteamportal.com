@@ -66,8 +66,8 @@ def login():
     user = User.query.filter_by(username=username).first()
     if user and bcrypt.check_password_hash(user.password_hash, password):
         login_user(user)
+        current_app.logger.info(f"{user.first_name} {user.last_name} logged in.")
         return jsonify(success=True, message=f"{user.first_name} has been logged in", user=user.serialize_basic()), 200
-    current_app.logger.info(f"{user.first_name} {user.last_name} logged in.")
     return jsonify(success=False, message="Invalid credentials"), 401
 
 
@@ -138,7 +138,7 @@ def invite_link():
         print(f"Error when sending invite link: {e}")
         return jsonify(success=False, message="Failed to send invite link"), 500
     
-    current_app.logger.info(f"An invite link has been sent to {email}")
+    current_app.logger.info(f"An invite link has been sent to {new_employee}")
     return jsonify(success=True, message=f"An invite link has been sent to {new_employee}."), 200
     
       
