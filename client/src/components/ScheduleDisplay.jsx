@@ -17,7 +17,6 @@ const ScheduleDisplay = () => {
       if (data.schedules.length === 0) {
         toast.success(data.message);
       }
-      console.log(data.schedules);
       setSchedules(data.schedules);
     };
     fetchSchedules();

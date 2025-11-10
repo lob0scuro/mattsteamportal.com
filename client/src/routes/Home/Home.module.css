@@ -22,6 +22,25 @@ div.postBoardHeader a {
   color: var(--linkText);
 }
 
+div.pageControls {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+div.pageControls button {
+  padding: 0;
+  background-color: transparent;
+  box-shadow: unset;
+  cursor: pointer;
+  text-decoration: underline;
+}
+div.pageControls button:disabled {
+  color: #6b6b6b;
+  text-decoration: none;
+}
+
 ul.postBoard {
   list-style-type: none;
   display: flex;

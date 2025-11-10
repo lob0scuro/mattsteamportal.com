@@ -69,11 +69,16 @@ def get_posts(category, page, limit):
     query = Post.query
     if category.lower() != "all":
         query = query.filter_by(category=category)
+        
+    total_posts = query.count()
+    total_pages = (total_posts + limit - 1) // limit
     posts = query.order_by(Post.created_at.desc()).offset(offset).limit(limit).all()
     return jsonify(
         success=True, 
         page=page, 
         limit=limit, 
+        total_posts=total_posts,
+        total_pages=total_pages,
         posts=[p.serialize_basic() for p in posts],
         message="No posts found" if not posts else "Posts retrieved successfully"
         ), 200

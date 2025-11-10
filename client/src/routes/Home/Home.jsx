@@ -15,19 +15,23 @@ const Home = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState();
+  const [totalPages, setTotalPages] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await fetch(
-          `/api/read/get_posts/${selectedCategory}/${page}/10`
+          `/api/read/get_posts/${selectedCategory}/${page}/5`
         );
         const data = await response.json();
         if (data.posts.length === 0) {
           setPosts([]);
         } else {
           setPosts(data.posts);
+          setCurrentPage(data.page);
+          setTotalPages(data.total_pages);
         }
       } catch (error) {
         console.error(error);
@@ -68,6 +72,23 @@ const Home = () => {
               <FontAwesomeIcon icon={faSquarePlus} />
             </Link>
           )}
+        </div>
+        <div className={styles.pageControls}>
+          <button
+            onClick={() => setPage((prev) => prev - 1)}
+            disabled={page === 1}
+          >
+            Prev
+          </button>
+          <span>
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((prev) => prev + 1)}
+            disabled={page === totalPages}
+          >
+            Next
+          </button>
         </div>
         <ul className={styles.postBoard}>
           {posts?.length === 0 ? (

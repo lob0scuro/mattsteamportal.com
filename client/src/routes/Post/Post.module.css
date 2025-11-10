@@ -45,9 +45,11 @@
   border-radius: 8px;
   background-color: var(--background);
   color: var(--textSecondary);
-  text-indent: 10px;
   text-align: center;
   text-wrap: balance;
+}
+p.postContentP:empty {
+  display: none;
 }
 
 .postPageFooter {
