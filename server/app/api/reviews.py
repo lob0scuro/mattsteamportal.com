@@ -26,10 +26,16 @@ def send_review():
         db.session.commit()
         body = f"""
         [REVIEW]
-        A new review has been submitted to MAtt's Appliances via the online review form link
+        A new review has been submitted for Matt's Appliances via the online review form
         
         [SENDER]
         {name}
+        
+        [APPLIANCE CONSIDERED]
+        {appliance}
+        
+        [SALES ASSOCIATE]
+        {sales_associate}
         
         [EMAIL]
         {email}
