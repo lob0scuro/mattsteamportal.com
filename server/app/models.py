@@ -117,3 +117,15 @@ class Comments(db.Model):
             'created_on': self.created_on,
             'commenter': self.commenter.serialize_basic()
         }
+        
+        
+class Reviews(db.Model):
+    __tablename__ = "reviews"
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    email = Column(String(250), nullable=True)
+    appliance = Column(String(100), nullable=True)
+    sales_associate = Column(String(50), nullable=True)
+    review = Column(Text, nullable=False)
+    created_on = Column(DateTime, default=func.now())
