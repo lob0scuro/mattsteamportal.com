@@ -119,7 +119,12 @@ const ReviewForm = () => {
           </div>
           <div>
             <label for="review">Comments</label>
-            <textarea name="review" id="review"></textarea>
+            <textarea
+              name="review"
+              id="review"
+              value={formData.review}
+              onChange={handleChange}
+            ></textarea>
           </div>
           <button type="submit">Submit Review</button>
         </form>
