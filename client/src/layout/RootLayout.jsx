@@ -22,11 +22,14 @@ const RootLayout = () => {
     }
   };
 
+  const path = location.pathname;
+  const hideLink = path.startsWith("/review") || path.startsWith("/thank-you");
+
   return (
     <>
       <header>
         <h1>
-          {!["/review", "/thank-you"].includes(location.pathname) ? (
+          {!hideLink ? (
             <Link to={"/"}>
               <img src={LOGO} />
             </Link>
