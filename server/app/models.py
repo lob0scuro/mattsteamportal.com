@@ -129,3 +129,14 @@ class Reviews(db.Model):
     sales_associate = Column(String(50), nullable=True)
     review = Column(Text, nullable=False)
     created_on = Column(DateTime, default=func.now())
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.name,
+            "appliance": self.appliance,
+            "sales_associate": self.sales_associate,
+            "review": self.review,
+            "created_on": self.created_on
+        }

@@ -58,3 +58,14 @@ def send_review():
     
     
 
+@reviews_bp.route("/get_reviews", methods=["GET"])
+def get_reviews():
+    reviews = Reviews.query.all()
+    return jsonify(success=True, reviews=[r.serialize() for r in reviews]), 200
+
+@reviews_bp.route("/get_review/<int:id>", methods=["GET"])
+def get_review(id):
+    review = Reviews.query.get(id)
+    if not review:
+        return jsonify(success=False, message="Review not found"), 400
+    return jsonify(success=True, review=review.serialize()), 200

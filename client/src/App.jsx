@@ -22,6 +22,7 @@ import ForgotPassword from "./routes/Auth/Password/ForgotPassword/ForgotPassword
 import ResetPassword from "./routes/Auth/Password/ResetPassword/ResetPassword.jsx";
 import ReviewForm from "./routes/Reviews/ReviewForm.jsx";
 import ThankYou from "./routes/Reviews/ThankYou.jsx";
+import ReviewBoard from "./routes/Reviews/ReviewBoard/ReviewBoard.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="edit-post/:post_id" element={<EditPostForm />} />
             <Route path="send-invite-link" element={<SendLink />} />
             <Route path="employee-directory" element={<DirectoryHome />} />
+            <Route path="review-board" element={<ReviewBoard />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />} />
