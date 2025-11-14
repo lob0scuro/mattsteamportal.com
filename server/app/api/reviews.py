@@ -7,14 +7,15 @@ reviews_bp = Blueprint("reviews", __name__)
 
 @reviews_bp.route("/send_review", methods=["POST"])
 def send_review():
-    name = request.form.get("name", "").strip()
-    email = request.form.get("email", "").strip()
-    appliance = request.form.get("appliance", "").strip()
-    sales_associate = request.form.get("sales_associate", "").strip()
-    review = request.form.get("review", "").strip()
+    data = request.get_json()
+    name = data.get("name", "").strip().title()
+    email = data.get("email", "").strip()
+    appliance = data.get("appliance", "").strip()
+    sales_associate = data.get("sales_associate", "").strip()
+    review = data.get("review", "").strip()
     
     new_review = Reviews(
-        name=name.capitalize(),
+        name=name,
         email=email,
         appliance=appliance,
         sales_associate=sales_associate,
@@ -25,7 +26,6 @@ def send_review():
         db.session.add(new_review)
         db.session.commit()
         body = f"""
-        [REVIEW]
         A new review has been submitted for Matt's Appliances via the online review form.
         
         [SENDER]
@@ -40,7 +40,7 @@ def send_review():
         [EMAIL]
         {email}
         
-        [CONTENT]
+        [REVIEW]
         {review}
         """
         msg = EmailMessage(

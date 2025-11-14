@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, useNavigate, Link } from "react-router-dom";
+import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "../Context/AuthContext";
 import toast from "react-hot-toast";
@@ -8,6 +8,7 @@ import LOGO from "../assets/matts-logo.png";
 const RootLayout = () => {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const logout = async () => {
     const response = await fetch("/api/auth/logout");
@@ -25,9 +26,13 @@ const RootLayout = () => {
     <>
       <header>
         <h1>
-          <Link to={"/"}>
+          {!["/review", "/thank-you"].includes(location.pathname) ? (
+            <Link to={"/"}>
+              <img src={LOGO} />
+            </Link>
+          ) : (
             <img src={LOGO} />
-          </Link>
+          )}
         </h1>
       </header>
       <div id="container">
@@ -35,24 +40,15 @@ const RootLayout = () => {
       </div>
       <Toaster position="bottom-right" reverseOrder={false} />
       <footer>
-        {user ? (
+        {user?.is_admin && (
           <>
-            <button onClick={logout}>LOGOUT</button>
-            {user.is_admin && (
-              <>
-                <Link to={"/send-invite-link"} className="registration-link">
-                  Send Registration Link
-                </Link>
-                <Link to={"/employee-directory"} className="registration-link">
-                  Employee Directory
-                </Link>
-              </>
-            )}
+            <Link to={"/send-invite-link"} className="registration-link">
+              Send Registration Link
+            </Link>
+            <Link to={"/employee-directory"} className="registration-link">
+              Employee Directory
+            </Link>
           </>
-        ) : (
-          <Link to={"request-password-reset"} className="registration-link">
-            Forgot Password?
-          </Link>
         )}
 
         <p>© 2025 Matt's Appliances</p>

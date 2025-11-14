@@ -1,6 +1,6 @@
 import styles from "./Login.module.css";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../Context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -74,6 +74,9 @@ const Login = () => {
         <div>
           <button type="submit">Login</button>
         </div>
+        <Link to={"/request-password-reset"} className="registration-link">
+          Forgot Password?
+        </Link>
       </form>
     </>
   );

@@ -20,6 +20,8 @@ import SendLink from "./routes/Auth/SendLink/SendLink.jsx";
 import DirectoryHome from "./routes/EmployeeDirectory/DirectoryHome.jsx";
 import ForgotPassword from "./routes/Auth/Password/ForgotPassword/ForgotPassword.jsx";
 import ResetPassword from "./routes/Auth/Password/ResetPassword/ResetPassword.jsx";
+import ReviewForm from "./routes/Reviews/ReviewForm.jsx";
+import ThankYou from "./routes/Reviews/ThankYou.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -39,6 +41,8 @@ const App = () => {
         <Route path="register" element={<Register />} />
         <Route path="request-password-reset" element={<ForgotPassword />} />
         <Route path="reset_password/:token" element={<ResetPassword />} />
+        <Route path="review" element={<ReviewForm />} />
+        <Route path="thank-you" element={<ThankYou />} />
       </Route>
     )
   );
