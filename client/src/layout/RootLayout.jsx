@@ -51,6 +51,9 @@ const RootLayout = () => {
             <Link to={"/employee-directory"} className="registration-link">
               Employee Directory
             </Link>
+            <Link to={"/review-board"} className="registration-link">
+              Reviews
+            </Link>
           </>
         )}
 

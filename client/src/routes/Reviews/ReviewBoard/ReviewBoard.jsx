@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./ReviewBoard.module.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { formatDate } from "../../../utils/Helpers";
 
 const ReviewBoard = () => {
   const [reviews, setReviews] = useState([]);
@@ -31,8 +32,8 @@ const ReviewBoard = () => {
 
   return (
     <>
-      <h1>Reviews</h1>
-      <ul>
+      <h1 className={styles.reviewHeader}>Reviews</h1>
+      <ul className={styles.reviewBoard}>
         {reviews.map(
           ({
             id,
@@ -43,7 +44,11 @@ const ReviewBoard = () => {
             review,
             created_on,
           }) => (
-            <li key={id}>{review}</li>
+            <li key={id}>
+              <h3>{name}</h3>
+              <p>{review}</p>
+              <small>{formatDate(created_on)}</small>
+            </li>
           )
         )}
       </ul>

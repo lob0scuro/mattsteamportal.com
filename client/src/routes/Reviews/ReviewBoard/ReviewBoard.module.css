@@ -1,0 +1,33 @@
+.reviewHeader {
+  margin-bottom: 1rem;
+}
+
+.reviewBoard {
+  list-style-type: none;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reviewBoard li {
+  background-color: var(--background);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.reviewBoard li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reviewBoard li h3 {
+  text-decoration: underline;
+}
+
+.reviewBoard li small {
+  font-size: 18px;
+  font-style: italic;
+  color: var(--textSecondary);
+}
