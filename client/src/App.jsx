@@ -23,6 +23,7 @@ import ResetPassword from "./routes/Auth/Password/ResetPassword/ResetPassword.js
 import ReviewForm from "./routes/Reviews/ReviewForm.jsx";
 import ThankYou from "./routes/Reviews/ThankYou.jsx";
 import ReviewBoard from "./routes/Reviews/ReviewBoard/ReviewBoard.jsx";
+import Review from "./routes/Reviews/ReviewBoard/Review.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="send-invite-link" element={<SendLink />} />
             <Route path="employee-directory" element={<DirectoryHome />} />
             <Route path="review-board" element={<ReviewBoard />} />
+            <Route path="review/:id" element={<Review />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />} />

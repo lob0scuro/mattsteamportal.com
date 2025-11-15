@@ -8,6 +8,10 @@ const ReviewBoard = () => {
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
 
+  const handleClick = (review_id) => {
+    navigate(`/review/${review_id}`);
+  };
+
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -44,7 +48,7 @@ const ReviewBoard = () => {
             review,
             created_on,
           }) => (
-            <li key={id}>
+            <li key={id} onClick={() => handleClick(id)}>
               <h3>{name}</h3>
               <p>{review}</p>
               <small>{formatDate(created_on)}</small>

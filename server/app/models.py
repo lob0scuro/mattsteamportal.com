@@ -134,7 +134,7 @@ class Reviews(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "email": self.name,
+            "email": self.email,
             "appliance": self.appliance,
             "sales_associate": self.sales_associate,
             "review": self.review,

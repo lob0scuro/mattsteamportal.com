@@ -43,6 +43,7 @@ const RootLayout = () => {
       </div>
       <Toaster position="bottom-right" reverseOrder={false} />
       <footer>
+        <p>© 2025 Matt's Appliances</p>
         {user?.is_admin && (
           <>
             <Link to={"/send-invite-link"} className="registration-link">
@@ -56,8 +57,6 @@ const RootLayout = () => {
             </Link>
           </>
         )}
-
-        <p>© 2025 Matt's Appliances</p>
       </footer>
     </>
   );
