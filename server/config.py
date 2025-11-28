@@ -21,7 +21,7 @@ class Config:
     SESSION_COOKIE_SECURE = FLASK_ENV == "production"   # only secure cookies in prod
     SESSION_COOKIE_HTTPONLY = True
     SESSION_USE_SIGNER = True
-    SESSION_KEY_PREFIX = "blu:"
+    SESSION_KEY_PREFIX = "teams:"
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
 
     # CORS
