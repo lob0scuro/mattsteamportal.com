@@ -1,0 +1,48 @@
+.userHomeContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userHomeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-inline: 0.5rem;
+}
+
+.userHomeHeader h1 {
+  font-size: 1.5rem;
+}
+.userNavi {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  gap: 15px;
+}
+.userNavi svg {
+  font-size: 1.2rem;
+  color: var(--textSecondary);
+}
+
+.currentWeekSchedule {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  border: 1px solid var(--textPrimary);
+  border-radius: 12px;
+  box-shadow: -1px 1px 3px var(--linkText);
+}
+
+.weekday {
+  /* border: 1px solid var(--textPrimary); */
+  flex: 1;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px;
+}

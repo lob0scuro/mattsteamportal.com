@@ -1,50 +1,114 @@
-export function formatDate(dateString) {
-  const date = new Date(dateString);
+///////////
+//SCHEMAS//
+///////////
+export const MONTH_NAMES = [
+  "January",
+  "Febuary",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+export const WEEKDAY = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
-  const dayName = days[date.getDay()];
-  const monthName = months[date.getMonth()];
-  const day = date.getDate();
-  const year = date.getFullYear();
-
-  // Determine ordinal suffix (st, nd, rd, th)
-  const suffix = (n) => {
-    if (n > 3 && n < 21) return "th"; // covers 11th–13th
-    switch (n % 10) {
-      case 1:
-        return "st";
-      case 2:
-        return "nd";
-      case 3:
-        return "rd";
-      default:
-        return "th";
-    }
-  };
-
-  return `${dayName}, ${monthName} ${day}${suffix(day)} ${year}`;
-}
-
-export const cell = (num) => {
-  if (num.length !== 10) return;
-
-  return `(${num.slice(0, 3)}) ${num.slice(3, 6)}-${num.slice(6)}`;
+export const suffix = (n) => {
+  if (n > 3 && n < 21) return "th";
+  switch (n % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
 };
+
+export const getWorkWeekFromDate = (date) => {
+  let d = typeof date === "string" ? parseLocalDate(date) : new Date(date);
+
+  // Sunday ? treat it as next day (monday)
+  if (d.getDay() === 0) {
+    d.setDate(d.getDate() + 1);
+  }
+
+  const dayOfWeek = d.getDay();
+  const monday = new Date(d);
+
+  //move back to monday
+  monday.setDate(d.getDate() - (dayOfWeek - 1));
+
+  const week = [];
+  for (let i = 0; i < 6; i++) {
+    const day = new Date(monday);
+    day.setDate(monday.getDate() + i);
+    week.push(day);
+  }
+
+  return week;
+};
+
+///////////////////
+//TIME OPERATIONS//
+//////////////////
+export const toAMPM = (time) => {
+  if (time === null) return "OFF";
+  if (time === "OFF") return time;
+
+  const [hourStr, minute] = time.split(":");
+  let hour = parseInt(hourStr, 10);
+
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12;
+
+  return `${hour}:${minute}${ampm}`;
+};
+
+export const toMilitary = (input) => {
+  if (!input) return null;
+
+  input = input.trim().toLowerCase();
+
+  if (input === "noon") return "12:00";
+  if (input === "midnight") return "00:00";
+
+  let match = input.match(/(\d{1,2})(?::(\d{1,2}))?\s*(am|pm)?/i);
+  if (!match) return null;
+
+  let hour = parseInt(match[1], 10);
+  let minute = parseInt(match[2] || "0", 10);
+  let ampm = match[3];
+
+  if (ampm) {
+    if (ampm === "pm" && hour !== 12) hour += 12;
+    if (ampm === "am" && hour === 12) hour = 0;
+  }
+
+  if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+
+  return (
+    hour.toString().padStart(2, "0") + ":" + minute.toString().padStart(2, "0")
+  );
+};
+
+///////////////////
+/////  TOOLS  /////
+//////////////////
 
 export const renderObjects = (obj) => {
   return Object.entries(obj).map(([value, label], index) => (

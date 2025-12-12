@@ -9,7 +9,6 @@ import {
 import RootLayout from "./layout/RootLayout.jsx";
 import ProtectedLayout from "./layout/ProtectedLayout.jsx";
 import AdminLayout from "./layout/AdminLayout.jsx";
-
 import Home from "./routes/Common/Home/Home.jsx";
 import Login from "./routes/Common/Login/Login.jsx";
 import Register from "./routes/Common/Register/Register.jsx";
