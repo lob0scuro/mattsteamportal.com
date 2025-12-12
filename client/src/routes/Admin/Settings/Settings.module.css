@@ -1,0 +1,110 @@
+.settingsContainer {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.settingsContainer > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  border: 3px solid var(--textPrimary);
+  border-radius: 12px;
+  position: relative;
+  min-width: 400px;
+}
+
+.settingsContainer > div svg.yaw {
+  color: darkgreen;
+  font-size: 2rem;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+}
+.settingsContainer > div svg.yaw:hover {
+  color: green;
+  font-size: 2.1rem;
+}
+
+.settingsContainer > div svg.naw {
+  color: darkred;
+  font-size: 2rem;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+}
+
+.shiftSettings {
+  gap: 3rem;
+}
+
+.shiftItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.shiftItems > div {
+  border: 1px solid var(--textPrimary);
+  border-radius: 8px;
+  padding: 0.6rem;
+  position: relative;
+}
+
+.shiftItems > div svg.deleteButton {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font-size: 24px;
+  color: darkred;
+}
+.shiftItems > div svg.deleteButton:hover {
+  color: red;
+  font-size: 28px;
+}
+
+.shiftItems > div p:first-child {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--buttonSecondary);
+}
+
+.userSettings {
+  gap: 3rem;
+}
+
+.userItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.userItems > div {
+  border: 1px solid var(--textPrimary);
+  border-radius: 8px;
+  padding: 0.6rem;
+  position: relative;
+}
+
+.userItems > div p:first-child {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--buttonSecondary);
+}
+
+.userItems > div svg.deleteButton {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font-size: 24px;
+  color: darkred;
+}
+.userItems > div svg.deleteButton:hover {
+  color: red;
+  font-size: 28px;
+}

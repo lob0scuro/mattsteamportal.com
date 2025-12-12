@@ -66,7 +66,7 @@ def register():
     db.session.commit()
     
     current_app.logger.info(f"{new_user.first_name} {new_user.last_name} has been registered.")
-    return jsonify(success=True, message="User registered successfully"), 201
+    return jsonify(success=True, message="User registered successfully", user=new_user.serialize()), 201
 
 
 @auth_bp.route('/login', methods=['POST'])

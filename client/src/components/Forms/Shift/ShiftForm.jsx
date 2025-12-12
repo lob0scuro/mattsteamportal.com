@@ -2,7 +2,7 @@ import styles from "./ShiftForm.module.css";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-const ShiftForm = () => {
+const ShiftForm = ({ onCreateShift }) => {
   const [formData, setFormData] = useState({
     title: "",
     start_time: "",
@@ -36,6 +36,15 @@ const ShiftForm = () => {
         throw new Error(data.message);
       }
       toast.success(data.message);
+
+      if (onCreateShift) {
+        onCreateShift(data.shift);
+      }
+      setFormData({
+        title: "",
+        start_time: "",
+        end_time: "",
+      });
     } catch (error) {
       console.error("[SHIFT CREATION ERROR]: ", error);
       toast.error(error.message);
@@ -44,6 +53,7 @@ const ShiftForm = () => {
 
   return (
     <form className={styles.shiftForm} onSubmit={handleSubmit}>
+      <h2>Add New Shift</h2>
       <div>
         <label htmlFor="title">Title</label>
         <input

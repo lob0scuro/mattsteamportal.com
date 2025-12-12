@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, abort, current_app
 from flask_login import login_required, current_user    
-from app.models import User, Post, Comment
+from app.models import User, Post, Comment, Shift
 from sqlalchemy import desc
 from datetime import datetime, timedelta
 import json
@@ -25,7 +25,7 @@ def load_employee_data():
 ##   GET USER DATA    ##
 ########################
 ########################
-@read_bp.route('/get_user/<int:user_id>', methods=['GET'])
+@read_bp.route('/user/<int:user_id>', methods=['GET'])
 @login_required
 def get_user(user_id):
     user = User.query.get(user_id)
@@ -34,7 +34,7 @@ def get_user(user_id):
     return jsonify(success=True, user=user.serialize()), 200
 
 
-@read_bp.route('/get_users', methods=['GET'])
+@read_bp.route('/users', methods=['GET'])
 @login_required
 def get_users():
     users = User.query.all()
@@ -133,3 +133,13 @@ def employee_directory():
         print(f"[ERROR]: {je}")
         return jsonify(success=False, message="Employee data is corrupted"), 500
     return jsonify(success=True, employees=employee_data), 200
+
+
+@read_bp.route("/shifts", methods=["GET"])
+@login_required
+def get_shifts():
+    shifts = Shift.query.all()
+    if not shifts:
+        return jsonify(success=False, message="Shifts not found"), 404
+    return jsonify(success=True, shifts=[s.serialize() for s in shifts]), 200
+

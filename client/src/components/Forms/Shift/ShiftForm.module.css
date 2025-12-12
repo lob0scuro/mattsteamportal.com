@@ -19,7 +19,7 @@
 }
 
 .shiftForm div input {
-  font-size: 18px;
+  font-size: 24px;
   padding: 4px;
   border-radius: 8px;
 }
@@ -27,4 +27,5 @@
 .shiftForm button[type="submit"] {
   align-self: center;
   margin-top: 1rem;
+  font-size: 28px;
 }

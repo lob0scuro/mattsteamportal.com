@@ -26,6 +26,7 @@
 .userNavi svg {
   font-size: 1.2rem;
   color: var(--textSecondary);
+  position: relative;
 }
 
 .currentWeekSchedule {

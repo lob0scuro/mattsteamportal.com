@@ -152,11 +152,11 @@ def create_shift():
     except ValueError:
         return jsonify(success=False, message="Invalid Time Format"), 400
     try:
-        new_shift = Shift(title=title.title(), start_time=start_time, end_time=end_time)
+        new_shift = Shift(title=title, start_time=start_time, end_time=end_time)
         
         db.session.add(new_shift)
         db.session.commit()
-        return jsonify(success=True, message="New shift created!"), 201
+        return jsonify(success=True, message="New shift created!", shift=new_shift.serialize()), 201
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"[SHIFT CREATION ERROR]: {e}")
