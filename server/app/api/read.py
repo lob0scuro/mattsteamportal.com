@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, abort, current_app
 from flask_login import login_required, current_user    
-from app.models import User, Post, Comments
+from app.models import User, Post, Comment
 from sqlalchemy import desc
 from datetime import datetime, timedelta
 import json
@@ -52,7 +52,7 @@ def get_post(id):
     post = Post.query.get(id)
     if not post:
         return jsonify(success=False, message="Could not query post"), 400
-    ordered_comments = Comments.query.filter_by(post_id=post.id).order_by(desc(Comments.created_on)).all()
+    ordered_comments = Comment.query.filter_by(post_id=post.id).order_by(desc(Comment.created_on)).all()
     post_data = post.serialize()
     post_data["comments"] = [c.serialize() for c in ordered_comments]
     

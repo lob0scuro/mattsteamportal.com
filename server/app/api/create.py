@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.models import User, Post, Comments
+from app.models import User, Post, Shift, Comment
 from app.extensions import db
 from flask_login import current_user, login_required
 import os
 from werkzeug.utils import secure_filename
 from pdf2image import convert_from_path
 import platform
-from datetime import datetime
+from datetime import datetime, time, date
 from flask_mailman import EmailMessage
 
 
@@ -116,7 +116,7 @@ def add_comment(post_id):
     data = request.get_json()
     comment = data.get("comment")
     try:
-        new_comment = Comments(
+        new_comment = Comment(
             post_id=post_id,
             user_id=current_user.id,
             content=comment
@@ -129,3 +129,35 @@ def add_comment(post_id):
     except Exception as e:
         current_app.logger.error(f"[COMMENT ERROR]: {e}")
         return jsonify(success=False, message="There was an error when posting new comment"), 500
+    
+    
+    
+@create_bp.route("/shift", methods=["POST"])
+@login_required
+def create_shift():
+    data = request.get_json()
+    start_str = data.get("start_time")
+    end_str = data.get("end_time")
+    title = data.get("title")
+    
+    if not start_str or not end_str:
+        off = Shift(title=title)
+        db.session.add(off)
+        db.session.commit()
+        return jsonify(success=True, message="New shift created!"), 201
+    
+    try:
+        start_time = time.fromisoformat(start_str)
+        end_time = time.fromisoformat(end_str)
+    except ValueError:
+        return jsonify(success=False, message="Invalid Time Format"), 400
+    try:
+        new_shift = Shift(title=title.title(), start_time=start_time, end_time=end_time)
+        
+        db.session.add(new_shift)
+        db.session.commit()
+        return jsonify(success=True, message="New shift created!"), 201
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"[SHIFT CREATION ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when adding new shift."), 500

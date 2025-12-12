@@ -30,7 +30,8 @@
 
 .currentWeekSchedule {
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
+  align-items: flex-start;
   width: 100%;
   border: 1px solid var(--textPrimary);
   border-radius: 12px;
@@ -43,6 +44,6 @@
   font-size: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   padding: 4px;
 }

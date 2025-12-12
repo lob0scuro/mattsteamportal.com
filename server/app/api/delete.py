@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.models import User, Post, Comments
+from app.models import User, Post, Comment
 from app.extensions import db
 from flask_login import current_user, login_required
 
@@ -22,7 +22,7 @@ def delete_post(id):
 @delete_bp.route("/delete_comment/<int:id>", methods=["DELETE"])
 @login_required
 def delete_comment(id):
-    comment = Comments.query.get(id)
+    comment = Comment.query.get(id)
     if not comment:
         return jsonify(success=False, message="Something went wrong when finding comment"), 400
     if not current_user.is_admin:

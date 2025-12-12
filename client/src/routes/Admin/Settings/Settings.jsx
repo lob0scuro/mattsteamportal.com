@@ -13,9 +13,11 @@ const Settings = () => {
           <div className={styles.addShiftContainer}>
             <ShiftForm />
           </div>
-          {shifts.map((shift, index) => (
-            <p key={index}>{shift.title}</p>
-          ))}
+          <div className={styles.shiftItems}>
+            {shifts.map((shift, index) => (
+              <p key={index}>{shift.title}</p>
+            ))}
+          </div>
         </div>
       </div>
     </div>
