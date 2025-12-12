@@ -35,7 +35,9 @@ const Home = () => {
         <div className={styles.userNavi}>
           <FontAwesomeIcon icon={faUserClock} />
           <FontAwesomeIcon icon={faSignsPost} />
-          {user.role === "admin" && <FontAwesomeIcon icon={faGears} />}
+          {user.role === "admin" && (
+            <FontAwesomeIcon icon={faGears} onClick={() => goto("/settings")} />
+          )}
         </div>
       </div>
       <div className={styles.currentWeekSchedule}>

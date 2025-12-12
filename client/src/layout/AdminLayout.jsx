@@ -6,7 +6,7 @@ const AdminLayout = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   if (loading) return <p>Loading...</p>;
-  if (!user.is_admin)
+  if (!user.role === "admin")
     return (
       <>
         <h2>Admin Panel</h2>
