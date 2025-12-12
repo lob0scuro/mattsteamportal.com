@@ -5,6 +5,7 @@ import ShiftForm from "../../../components/Forms/Shift/ShiftForm";
 const Settings = () => {
   const [shifts, setShifts] = useState([]);
   const [users, setUsers] = useState([]);
+
   return (
     <div className={styles.settingsContainer}>
       <h2>Settings</h2>
