@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import LOGO from "../assets/matts-logo.png";
 
 const RootLayout = () => {
-  const { user, setUser } = useAuth();
+  const { user, setUser, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -24,6 +24,8 @@ const RootLayout = () => {
 
   const path = location.pathname;
   const hideLink = path.startsWith("/review") || path.startsWith("/thank-you");
+
+  if (loading) return <h2>Loading...</h2>;
 
   return (
     <>
@@ -43,6 +45,7 @@ const RootLayout = () => {
       </div>
       <Toaster position="bottom-right" reverseOrder={false} />
       <footer>
+        {user && <button onClick={logout}>Logout</button>}
         {user?.is_admin && (
           <>
             <Link to={"/send-invite-link"} className="registration-link">

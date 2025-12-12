@@ -3,15 +3,15 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.extensions import db
 from datetime import date, time
 from app.models.enums import LocationEnum
-from app.models.user import User
-from app.models.shift import Shift
+# from app.models.user import User
+# from app.models.shift import Shift
 
 class Schedule(db.Model):
     __tablename__ = "schedules"
     
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    shift_id: Mapped[int] = mapped_column(ForeignKey("shift.id"), nullable=False)
+    shift_id: Mapped[int] = mapped_column(ForeignKey("shifts.id"), nullable=False)
     shift_date: Mapped[date] = mapped_column(Date, nullable=False)
     location: Mapped[LocationEnum] = mapped_column(saEnum(LocationEnum), nullable=False)
     custom_start_time: Mapped[time] = mapped_column(Time, nullable=True)
@@ -19,8 +19,8 @@ class Schedule(db.Model):
     note: Mapped[str] = mapped_column(Text, nullable=True)
     
     #relationships
-    user: Mapped[User] = relationship("User", back_populates="schedules")
-    shift: Mapped[Shift] = relationship("Shift", back_populates="schedules")
+    user = relationship("User", back_populates="schedules")
+    shift = relationship("Shift", back_populates="schedules")
     
     def serialize(self):
         start = self.custom_start_time or self.shift.start_time

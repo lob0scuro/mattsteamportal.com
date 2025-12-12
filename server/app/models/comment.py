@@ -2,8 +2,8 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Text, DateTime, ForeignKey
 from app.extensions import db
-from app.models.user import User
-from app.models.post import Post
+# from app.models.user import User
+# from app.models.post import Post
 
 class Comment(db.Model):
     __tablename__ = "comments"
@@ -17,8 +17,9 @@ class Comment(db.Model):
         default=lambda: datetime.now(timezone.utc)
     )
     
-    commenter: Mapped[User] = relationship("User", back_populates="comments")
-    post: Mapped[Post] = relationship("Post", back_populates="comments")
+    #relationships
+    commenter = relationship("User", back_populates="comments")
+    post = relationship("Post", back_populates="comments")
     
     def serialize(self):
         return {

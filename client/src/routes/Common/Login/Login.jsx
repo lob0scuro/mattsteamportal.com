@@ -1,62 +1,53 @@
 import styles from "./Login.module.css";
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../Context/AuthContext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const { setUser, setLoading } = useAuth();
+  const { setUser, setLoading, loading } = useAuth();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+
     setLoading(true);
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ username, password }),
       });
       const data = await response.json();
       if (!data.success) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.message);
       }
       setLoading(false);
-      toast.success(data.message || "Login successful");
       setUser(data.user);
+      toast.success(data.message);
       navigate("/");
     } catch (error) {
-      console.error("Error:", error);
+      console.error("[LOGIN ERROR]: ", error);
       toast.error(error.message);
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className={styles.loginForm}>
+    <div>
+      <form className={styles.loginForm} onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Username</label>
           <input
             type="text"
             name="username"
-            id="username"
-            value={formData.username}
-            onChange={handleChange}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
@@ -65,20 +56,14 @@ const Login = () => {
           <input
             type="password"
             name="password"
-            id="password"
-            value={formData.password}
-            onChange={handleChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <div>
-          <button type="submit">Login</button>
-        </div>
-        <Link to={"/request-password-reset"} className="registration-link">
-          Forgot Password?
-        </Link>
+        <button type="submit">Login</button>
       </form>
-    </>
+    </div>
   );
 };
 

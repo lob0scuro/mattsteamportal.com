@@ -1,0 +1,35 @@
+.loginForm {
+  background-color: var(--background);
+  padding: 1rem;
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 12px;
+}
+
+.loginForm div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.loginForm div label {
+  font-size: 12px;
+  margin-left: 4px;
+  font-weight: 800;
+}
+
+.loginForm div input {
+  width: 100%;
+  font-size: 24px;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.loginForm button[type="submit"] {
+  font-size: 30px;
+  margin-top: 1.5rem;
+  font-weight: 600;
+}

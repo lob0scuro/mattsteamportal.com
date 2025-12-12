@@ -5,10 +5,10 @@ from flask_login import UserMixin
 from app.extensions import db, bcrypt
 from app.models.enums import RoleEnum, DepartmentEnum
 from flask_bcrypt import generate_password_hash, check_password_hash
-from app.models.comment import Comment
-from app.models.post import Post
-from app.models.time_off_request import TimeOffRequest
-from app.models.schedule import Schedule
+# from app.models.comment import Comment
+# from app.models.post import Post
+# from app.models.time_off_request import TimeOffRequest
+# from app.models.schedule import Schedule
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
@@ -29,10 +29,10 @@ class User(db.Model, UserMixin):
     department: Mapped[DepartmentEnum] = mapped_column(saEnum(DepartmentEnum), nullable=False)
     
     #realtionships
-    posts: Mapped[list["Post"]] = relationship("Post", back_populates="author", lazy=True)
-    comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="commenter", lazy=True)
-    schedules: Mapped[list["Schedule"]] = relationship("Schedule", back_populates="user", lazy=True)
-    time_off_requests: Mapped[list["TimeOffRequest"]] = relationship("TimeOffRequest", back_populates="user", lazy=True)
+    posts = relationship("Post", back_populates="author", lazy=True)
+    comments = relationship("Comment", back_populates="commenter", lazy=True)
+    schedules = relationship("Schedule", back_populates="user", lazy=True)
+    time_off_requests = relationship("TimeOffRequest", back_populates="user", lazy=True)
     
     
     #password methods

@@ -2,7 +2,7 @@ from datetime import datetime, time
 from sqlalchemy import Time, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.extensions import db
-from app.models.schedule import Schedule
+# from app.models.schedule import Schedule
 
 class Shift(db.Model):
     __tablename__ = "shifts"
@@ -12,7 +12,7 @@ class Shift(db.Model):
     start_time: Mapped[time] = mapped_column(Time, nullable=True)
     end_time: Mapped[time] = mapped_column(Time, nullable=True)
     
-    schedules: Mapped[list["Schedule"]] = relationship("Schedule", back_populates="shift", lazy=True)
+    schedules= relationship("Schedule", back_populates="shift", lazy=True)
     
     
     def duration(self):

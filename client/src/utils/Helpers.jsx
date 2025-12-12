@@ -45,3 +45,11 @@ export const cell = (num) => {
 
   return `(${num.slice(0, 3)}) ${num.slice(3, 6)}-${num.slice(6)}`;
 };
+
+export const renderObjects = (obj) => {
+  return Object.entries(obj).map(([value, label], index) => (
+    <option value={value} key={index}>
+      {label}
+    </option>
+  ));
+};

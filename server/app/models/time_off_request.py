@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, Date, String, Enum as saEnum
 from app.models.enums import TimeOffStatusEnum
 from app.extensions import db
-from app.models.user import User
+# from app.models.user import User
 
 class TimeOffRequest(db.Model):
     __tablename__ = "time_off_requests"
@@ -15,7 +15,7 @@ class TimeOffRequest(db.Model):
     reason: Mapped[str] = mapped_column(String(255), nullable=False)
     status: Mapped[TimeOffStatusEnum] = mapped_column(saEnum(TimeOffStatusEnum), nullable=False, default=TimeOffStatusEnum.PENDING)
     
-    user: Mapped[User] = relationship("User", back_populates="time_off_requests")
+    user = relationship("User", back_populates="time_off_requests")
     
     
     def serialize(self):

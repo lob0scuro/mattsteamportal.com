@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from app.extensions import db, bcrypt
 from app.models import User
+from app.models import RoleEnum, DepartmentEnum
 from flask_mailman import EmailMessage
 from itsdangerous import URLSafeTimedSerializer
 
@@ -25,15 +26,16 @@ def verify_reset_token(token, expiration=1800): #30 minutes
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-    admin_flag = request.args.get('admin') == 'true'
     if not data:
         return jsonify(success=False, message="No input data provided"), 400
-    username = data.get('username')
     first_name = data.get('first_name')
     last_name = data.get('last_name')
+    username = data.get('username')
     email = data.get('email')
-    password = data.get('password1')
-    check_password = data.get('password2')
+    role = data.get("role")
+    department = data.get("department")
+    password = data.get('password')
+    check_password = data.get('check_password')
     
     if password != check_password:
         return jsonify(success=False, message="Passwords do not match"), 400
@@ -41,15 +43,25 @@ def register():
     if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
         return jsonify(success=False, message="Username or email already exists"), 400
     
-    password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    try:
+        roled = RoleEnum(role.lower())
+    except ValueError:
+        return jsonify(success=False, message="Invalid Role"), 400
+    
+    try:
+        departmented = DepartmentEnum(department.lower())
+    except ValueError:
+        return jsonify(success=False, message="Invalide Department"), 400
+    
     new_user = User(
         username=username,
-        first_name=first_name.capitalize(),
-        last_name=last_name.capitalize(),
+        first_name=first_name.title(),
+        last_name=last_name.title(),
         email=email,
-        password_hash=password_hash,
-        is_admin=admin_flag
+        role=roled,
+        department=departmented,
     )
+    new_user.set_password(password)
     db.session.add(new_user)
     db.session.commit()
     
@@ -64,11 +76,13 @@ def login():
     password = data.get('password')
     
     user = User.query.filter_by(username=username).first()
-    if user and bcrypt.check_password_hash(user.password_hash, password):
+    if not user:
+        return jsonify(success=False, message="User not found"), 404
+    if not user.check_password(password):
+        return jsonify(success=False, message="Invalid credentials"), 401
+    else:
         login_user(user)
-        current_app.logger.info(f"{user.first_name} {user.last_name} logged in.")
-        return jsonify(success=True, message=f"{user.first_name} has been logged in", user=user.serialize_basic()), 200
-    return jsonify(success=False, message="Invalid credentials"), 401
+        return jsonify(success=True, message=f"Logged in as {user.full_name}", user=user.serialize()), 200
 
 
 @auth_bp.route('/logout', methods=['GET'])
@@ -82,7 +96,7 @@ def logout():
 @auth_bp.route('/hydrate_user', methods=['GET'])
 @login_required
 def hydrate_user():
-    user_data = current_user.serialize_basic()
+    user_data = current_user.serialize()
     return jsonify(success=True, user=user_data), 200
 
 
