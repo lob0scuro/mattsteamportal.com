@@ -8,7 +8,7 @@
 
 .userHomeHeader {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
   gap: 0.8rem;
   width: 100%;
@@ -33,6 +33,27 @@
   color: var(--linkText);
 }
 
+.userHomeHeader .switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userHomeHeader .switcher button {
+  background-color: var(--buttonSecondary);
+  box-shadow: unset;
+  border-radius: 0;
+  border: 1px solid var(--linkText);
+  font-size: 1rem;
+  padding: 8px 2rem;
+}
+.userHomeHeader .switcher button:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.userHomeHeader .switcher button:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
 .currentWeekSchedule {
   display: flex;
   flex-direction: column;
@@ -42,6 +63,16 @@
   border-radius: 12px;
   box-shadow: -1px 1px 3px var(--linkText);
   padding: 2px;
+}
+
+.currentWeekSchedule .dateHeader {
+  font-size: 18px;
+  background-color: var(--backgroundDark);
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+  padding: 4px 10px;
+  align-self: center;
+  text-align: end;
 }
 
 .dayOfWeek {
