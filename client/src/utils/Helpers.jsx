@@ -63,6 +63,36 @@ export const getWorkWeekFromDate = (date) => {
   return week;
 };
 
+export const formatDate = (date) => {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}-${String(date.getDate()).padStart(2, "0")}`;
+};
+
+export const parseLocalDate = (dateStr) => {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+export const convertDateFromStr = (date_str) => {
+  const [year, month, day] = date_str.split("-");
+  return `${MONTH_NAMES[Number(month) - 1]} ${day + suffix(day)}, ${year}`;
+};
+
+export const getDatesInRange = (start, end) => {
+  const dates = [];
+  let current = new Date(start);
+
+  const last = new Date(end);
+  while (current <= last) {
+    dates.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+
+  return dates;
+};
+
 ///////////////////
 //TIME OPERATIONS//
 //////////////////
@@ -117,3 +147,5 @@ export const renderObjects = (obj) => {
     </option>
   ));
 };
+
+export const locationAbbr = (loc) => (loc === "lake_charles" ? "LC" : "JN");

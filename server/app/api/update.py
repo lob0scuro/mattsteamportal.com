@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.models import User, Post
+from app.models import User, Post, TimeOffStatusEnum, RoleEnum, TimeOffRequest
 from app.extensions import db
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
@@ -82,3 +82,24 @@ def update_post(id):
         current_app.logger.error(f"[POST UPDATE ERROR]: {e}")
         return jsonify(success=False, message="There was an error when updating post"), 500
     
+    
+@update_bp.route("/time_off_request/<int:id>/<status>", methods=["PATCH"])
+@login_required
+def update_time_off_status(id, status):
+    if current_user.role not in [RoleEnum.ADMIN]:
+        return jsonify(success=False, message="Unauthorized"), 403
+    
+    status = status.lower()    
+    time_off_request = TimeOffRequest.query.get(id)
+    
+    if not time_off_request:
+        return jsonify(success=False, message="Request not found"), 404
+    
+    try:
+        status = TimeOffStatusEnum(status)
+    except ValueError:
+        return jsonify(success=False, message="Invalid request status"), 400
+    
+    time_off_request.status = status
+    db.session.commit()
+    return jsonify(success=True, message="Status updated!"), 200

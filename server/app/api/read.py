@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request, abort, current_app
 from flask_login import login_required, current_user    
-from app.models import User, Post, Comment, Shift
-from sqlalchemy import desc
-from datetime import datetime, timedelta
+from app.extensions import db
+from app.models import User, Post, Comment, Shift, Schedule, TimeOffRequest
+from sqlalchemy import desc, select
+from datetime import datetime, timedelta, date
 import json
 import platform
 
@@ -83,41 +84,51 @@ def get_posts(category, page, limit):
         message="No posts found" if not posts else "Posts retrieved successfully"
         ), 200
 
-
-@read_bp.route("/get_schedules", methods=["GET"])
+########################
+########################
+## GET SCHEDULE DATA  ##
+########################
+########################
+@read_bp.route("/schedules", methods=["GET"])
 @login_required
 def get_schedules():
-    today = datetime.today()
-    monday = today - timedelta(days=today.weekday())
-    monday = monday.replace(hour=0, minute=0, second=0, microsecond=0)
-    
-    if today.weekday() == 6:
-        monday += timedelta(days=7)
+    schedules = Schedule.query.all()
+    if not schedules:
+        return jsonify(success=False, message="Schedules not found"), 404
+    return jsonify(success=True, schedules=[s.serialize() for s in schedules]), 200
+
+@read_bp.route("/user_schedule/<int:id>", methods=["GET"])
+@login_required
+def get_user_schedule(id):
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    if not start_date or not end_date:
+        return jsonify(success=False, message="Start and End dates are required"), 400
     
     try:
-        weekly_posts = (
-            Post.query.filter(Post.category == 'schedule').filter(Post.schedule_week == monday).order_by(Post.created_at.asc()).all()
-        )
-        
-        expected_teams = {"Sales", "Cleaners", "Techs"}
-        found_teams = {p.title for p in weekly_posts}
-        
-        missing = expected_teams - found_teams
-        
-        if not weekly_posts:
-            return jsonify(success=True, message="No schedules have been posted yet", schedules=[])
-        
-        if missing:
-            return jsonify(
-                success=True,
-                message=f"Schedules incomplete - missing: {','.join(missing)}",
-                schedules=[p.serialize_basic() for p in weekly_posts],
-            ), 200
-        
-        return jsonify(success=True, schedules=[p.serialize_basic() for p in weekly_posts]), 200
-    except Exception as e:
-        return jsonify(success=False, message="There was an error when querying for this weeks schedules."), 500
+        start = date.fromisoformat(start_date)
+        end = date.fromisoformat(end_date)
+    except ValueError:
+        return jsonify(success=False, message="Invalid date format. Use YYYY-MM-DD"), 400
     
+    user = User.query.get(id)
+    if not user:
+        return jsonify(success=False, message="User not found"), 404
+    
+    stmt = (
+        select(Schedule)
+        .where(
+            Schedule.user_id == id,
+            Schedule.shift_date.between(start, end)
+        )
+        .order_by(Schedule.shift_date.asc())
+    )
+    
+    schedule = db.session.execute(stmt).scalars().all()
+    
+    return jsonify(success=True, user=user.serialize(), schedule=[s.serialize() for s in schedule]), 200
+
+
 
 @read_bp.route("/employee_directory", methods=["GET"])
 @login_required
@@ -143,3 +154,34 @@ def get_shifts():
         return jsonify(success=False, message="Shifts not found"), 404
     return jsonify(success=True, shifts=[s.serialize() for s in shifts]), 200
 
+
+
+#------------------
+#   TIME OFF QUERY
+#------------------
+@read_bp.route("/time_off_request/<int:id>", methods=["GET"])
+@login_required
+def get_time_off_request(id):
+    time_off_request = TimeOffRequest.query.get(id)
+    if not time_off_request:
+        return jsonify(success=False, message="Request not found"), 404
+    return jsonify(success=True, time_off_request=time_off_request.serialize()), 200
+
+@read_bp.route("/time_off_requests", methods=["GET"])
+@login_required
+def get_time_off_requests():
+    time_off_requests = TimeOffRequest.query.all()
+    if not time_off_requests:
+        return jsonify(success=False, message="Requests not found"), 404
+    
+    by_status = {
+        "pending": [],
+        "approved": [],
+        "denied": []
+    }
+    
+    for to in time_off_requests:
+        by_status[to.status.value].append(to.serialize())
+    
+    
+    return jsonify(success=True, time_off_requests=by_status), 200

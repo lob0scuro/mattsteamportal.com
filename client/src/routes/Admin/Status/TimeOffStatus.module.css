@@ -1,0 +1,105 @@
+.timeOffStatusMasterBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.timeOffStatusMasterBlock > div {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeOffStatusMasterBlock > div > p:first-child {
+  font-weight: 800;
+  font-size: 2rem;
+  align-self: flex-start;
+  margin-left: 6px;
+  color: var(--primary);
+  text-shadow: -1px 1px 3px #333;
+}
+
+.timeOffStatusMasterBlock ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  list-style-type: none;
+  gap: 2rem;
+  width: 100%;
+  font-size: 24px;
+  background: var(--background);
+  border: 1px solid var(--textPrimary);
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+
+.timeOffStatusMasterBlock ul li {
+  display: flex;
+  width: 100%;
+  min-height: 100px;
+  align-items: flex-end;
+  justify-content: space-between;
+  background-color: var(--backgroundDark);
+  color: var(--textPrimary);
+  padding: 8px;
+  border: 1px solid var(--textPrimary);
+  border-radius: 8px;
+}
+
+.timeOffStatusMasterBlock ul li div:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  height: 100%;
+  width: 100%;
+}
+
+.timeOffStatusMasterBlock ul li div:last-child {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.timeOffStatusMasterBlock ul li div:last-child button {
+  font-size: 22px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background-color: var(--linkText);
+  color: #fefefe;
+  width: fit-content;
+}
+.timeOffStatusMasterBlock ul li div:last-child button.denyRequest {
+  background-color: darkred;
+}
+
+li.noRequests p {
+  font-size: 2rem;
+  align-self: center;
+}
+
+@media screen and (max-width: 1400px) {
+  .timeOffStatusMasterBlock > div > p:first-child {
+    font-size: 1.5rem;
+  }
+  .timeOffStatusMasterBlock div ul li {
+    flex-direction: column;
+  }
+  .timeOffStatusMasterBlock div ul li div:last-child {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-block: 1rem;
+  }
+
+  .timeOffStatusMasterBlock div ul li div:first-child {
+    font-size: 1rem;
+    align-items: flex-start;
+    align-self: center;
+  }
+}

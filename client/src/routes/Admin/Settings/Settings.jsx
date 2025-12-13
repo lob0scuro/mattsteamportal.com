@@ -1,7 +1,12 @@
 import styles from "./Settings.module.css";
 import React, { useEffect, useState } from "react";
 import ShiftForm from "../../../components/Forms/Shift/ShiftForm";
-import { getShifts, getUsers } from "../../../utils/API";
+import {
+  deleteShift,
+  deleteUser,
+  getShifts,
+  getUsers,
+} from "../../../utils/API";
 import toast from "react-hot-toast";
 import { toAMPM } from "../../../utils/Helpers";
 import UserForm from "../../../components/Forms/User/UserForm";
@@ -52,6 +57,22 @@ const Settings = () => {
     setUsers((prev) => [...prev, newUser]);
   };
 
+  const handleDelete = async (id, item) => {
+    if (!confirm(`Delete ${item}?`)) return;
+    const del = item === "shift" ? await deleteShift(id) : await deleteUser(id);
+    if (!del.success) {
+      toast.error(del.message);
+      return;
+    }
+    toast.success(del.message);
+
+    if (item === "shift") {
+      setShifts((prev) => prev.filter((s) => s.id !== id));
+    } else {
+      setUsers((prev) => prev.filter((u) => u.id !== id));
+    }
+  };
+
   return (
     <div className={styles.settingsContainer}>
       <div className={styles.shiftSettings}>
@@ -81,6 +102,7 @@ const Settings = () => {
                 <FontAwesomeIcon
                   icon={faDeleteLeft}
                   className={styles.deleteButton}
+                  onClick={() => handleDelete(shift.id, "shift")}
                 />
               </div>
             ))}
@@ -106,6 +128,7 @@ const Settings = () => {
               <FontAwesomeIcon
                 icon={faDeleteLeft}
                 className={styles.deleteButton}
+                onClick={() => handleDelete(user.id, "user")}
               />
             </div>
           ))}
