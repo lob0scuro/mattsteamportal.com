@@ -494,13 +494,6 @@ const Scheduler = () => {
                     cell.status === "committed" && styles.committedCell
                   )}
                   key={cellIndex}
-                  // onClick={() => {
-                  //   if (cell.shift_id && !selectedShift) {
-                  //     handleDeleteSchedule(cell);
-                  //   } else {
-                  //     handleCellClick(cell);
-                  //   }
-                  // }}
                   onClick={() => {
                     if (!cell.shift_id) {
                       handleCellClick(cell);

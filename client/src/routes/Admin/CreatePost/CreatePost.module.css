@@ -1,0 +1,88 @@
+.newPostContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.newPostContainer svg.returnTo {
+  font-size: 2rem;
+  align-self: flex-end;
+  margin-right: 2rem;
+  margin-bottom: 1rem;
+  color: var(--linkText);
+}
+
+.newPostForm {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.newPostForm div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.newPostForm div label {
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.newPostForm div input,
+select,
+textarea {
+  width: 100%;
+  font-size: 24px;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.newPostForm div textarea {
+  resize: none;
+  height: 10rem;
+}
+
+.newPostForm .fileUpload input[type="file"] {
+  display: none;
+}
+
+.newPostForm .fileUpload label {
+  border: 1px solid var(--textPrimary);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: -1px 1px 4px #777;
+  align-self: center;
+}
+
+.newPostForm .imageDisplay {
+  width: 100%;
+  align-items: center;
+  position: relative;
+}
+
+img.imgPreview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+button.removeImage {
+  background-color: transparent;
+  box-shadow: unset;
+  color: darkred;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 24px;
+}
+
+.newPostForm button[type="submit"] {
+  margin-top: 3rem;
+}

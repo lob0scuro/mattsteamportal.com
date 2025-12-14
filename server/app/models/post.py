@@ -35,7 +35,9 @@ class Post(db.Model):
             "title": self.title,
             "category": str(self.category),
             "visibility": str(self.visibility),
-            "author": self.author.serialize()
+            "author": self.author.serialize(),
+            "file_path": self.file_path,
+            "created_at": self.created_at.date().isoformat()
         }
         
     def serialize_full(self):
@@ -46,7 +48,7 @@ class Post(db.Model):
             "category": str(self.category),
             "visibility": str(self.visibility),
             "file_path": self.file_path,
-            "created_at": self.created_at.isoformat(),
+            "created_at": self.created_at.date().isoformat(),
             "author": self.author.serialize(),
             "comments": [c.serialize() for c in self.comments]
         }

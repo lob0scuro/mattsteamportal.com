@@ -48,20 +48,17 @@ def get_users():
 ##   GET POST DATA    ##
 ########################
 ########################
-@read_bp.route("/get_post/<int:id>", methods=["GET"])
+@read_bp.route("/post/<int:id>", methods=["GET"])
 def get_post(id):
     post = Post.query.get(id)
     if not post:
         return jsonify(success=False, message="Could not query post"), 400
-    ordered_comments = Comment.query.filter_by(post_id=post.id).order_by(desc(Comment.created_on)).all()
-    post_data = post.serialize()
-    post_data["comments"] = [c.serialize() for c in ordered_comments]
     
     current_app.logger.info(f"{current_user.first_name} {current_user.last_name} viewed post '{post.title}'")
-    return jsonify(success=True, post=post_data), 200
+    return jsonify(success=True, post=post.serialize_full()), 200
 
 
-@read_bp.route("/get_posts/<category>/<int:page>/<int:limit>", methods=["GET"])
+@read_bp.route("/posts/<category>/<int:page>/<int:limit>", methods=["GET"])
 def get_posts(category, page, limit):
     page = max(page, 1)
     offset = (page - 1) * limit
@@ -80,7 +77,7 @@ def get_posts(category, page, limit):
         limit=limit, 
         total_posts=total_posts,
         total_pages=total_pages,
-        posts=[p.serialize_basic() for p in posts],
+        posts=[p.serialize() for p in posts],
         message="No posts found" if not posts else "Posts retrieved successfully"
         ), 200
 
@@ -170,18 +167,18 @@ def get_time_off_request(id):
 @read_bp.route("/time_off_requests", methods=["GET"])
 @login_required
 def get_time_off_requests():
-    time_off_requests = TimeOffRequest.query.all()
-    if not time_off_requests:
-        return jsonify(success=False, message="Requests not found"), 404
-    
-    by_status = {
-        "pending": [],
-        "approved": [],
-        "denied": []
-    }
-    
-    for to in time_off_requests:
-        by_status[to.status.value].append(to.serialize())
-    
-    
-    return jsonify(success=True, time_off_requests=by_status), 200
+    try:
+        time_off_requests = TimeOffRequest.query.all()
+        by_status = {
+            "pending": [],
+            "approved": [],
+            "denied": []
+        }
+        
+        for to in time_off_requests:
+            by_status[to.status.value].append(to.serialize())
+        
+        return jsonify(success=True, time_off_requests=by_status), 200
+    except Exception as e:
+        current_app.logger.error(f"[TIME OFF REQUEST QUERY ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when querying time off requests."), 500

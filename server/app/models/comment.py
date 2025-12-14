@@ -25,7 +25,7 @@ class Comment(db.Model):
         return {
             "id": self.id,
             "content": self.content,
-            "created_at": self.created_at.isoformat(),
+            "created_at": self.created_at.date().isoformat(),
             "commenter": self.commenter.serialize()
         }
         

@@ -111,8 +111,7 @@ const Home = () => {
     <div className={styles.userHomeContainer}>
       <div className={styles.userHomeHeader}>
         <div className={styles.userNavi}>
-          {/* <FontAwesomeIcon icon={faCalendarDay} /> */}
-          <FontAwesomeIcon icon={faSignsPost} />
+          <FontAwesomeIcon icon={faSignsPost} onClick={() => goto("/posts")} />
           <FontAwesomeIcon icon={faPeopleGroup} />
           <FontAwesomeIcon
             icon={faUserClock}

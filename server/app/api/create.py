@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.models import User, Post, Shift, Comment, Schedule, LocationEnum, TimeOffRequest
+from app.models import User, Post, Shift, Comment, Schedule, LocationEnum, TimeOffRequest, PostVisibilityEnum, PostCategoryEnum
 from app.extensions import db
 from flask_login import current_user, login_required
 import os
@@ -25,33 +25,30 @@ def str_to_time(s):
 create_bp = Blueprint("create", __name__)
 
 
-@create_bp.route("/create_post", methods=["POST"])
+@create_bp.route("/post", methods=["POST"])
 @login_required
 def create_post():
     
     title = request.form.get("title").strip()
     content = request.form.get("content", "").strip()
-    category = request.form.get("category", "general").strip()
-    schedule_week = request.form.get('schedule_week') or None
-    date_obj = None
+    category_str = request.form.get("category", "general").upper()
+    visibility_str = request.form.get("visibility", "public").upper()
     
-    if schedule_week:
-        date_obj = datetime.strptime(schedule_week, "%Y-%m-%d")
+    try:
+        category = PostCategoryEnum[category_str]
+    except KeyError:
+        return jsonify(success=False, message="Invalid category"), 400
     
+    try:
+        visibility = PostVisibilityEnum[visibility_str]
+    except KeyError:
+        return jsonify(success=False, message="Invalid visibility status"), 400
     
     file = request.files.get("upload")
     file_path = None
+
     
-    existing = Post.query.filter_by(
-        category='schedule',
-        title=title,
-        schedule_week=schedule_week
-    ).first()
-    
-    if existing:
-        return jsonify(success=False, message="Schedule already exists for this team on this week"), 400
-    
-    if file and allowed_file(file.filename):
+    if file and file.filename and allowed_file(file.filename):
         safe_filename = secure_filename(file.filename)
         upload_folder = current_app.config["UPLOAD_FOLDER"]
         os.makedirs(upload_folder, exist_ok=True)
@@ -90,27 +87,39 @@ def create_post():
         title=title,
         content=content,
         category=category,
+        visibility=visibility,
         file_path=file_path,
         author_id=current_user.id,
-        schedule_week=date_obj
         )
         db.session.add(post)
         db.session.commit()
         
         current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created a post '{post.title}'")
 
-        users = User.query.all()
+        # users = User.query.all()
         
-        for user in users:
-            EmailMessage(
-                subject=f"New Team Portal Post from {current_user.username}!",
-                body=f"Hey {user.username}, {current_user.username} has just posted on mattsteamportal.com",
-                to=[user.email],
-            ).send()
+        # for user in users:
+        #     EmailMessage(
+        #         subject=f"New Team Portal Post from {current_user.username}!",
+        #         body=f"Hey {user.username}, {current_user.username} has just posted on mattsteamportal.com",
+        #         to=[user.email],
+        #     ).send()
             
-        return jsonify(success=True, message="Post has been successfully created!", post_id=post.id), 201
+        return jsonify(success=True, message="New post created!", post_id=post.id), 201
     except Exception as e:
         db.session.rollback()
+        
+        if file_path:
+            try:
+                os.remove(
+                    os.path.join(
+                        current_app.config["UPLOAD_FOLDER"],
+                        os.path.basename(file_path)
+                    )
+                )
+            except Exception:
+                pass
+            
         current_app.logger.error(f"[POST ERROR]: {e}")
         return jsonify(success=False, message=f"There was an error when submitting new post"), 500
         
