@@ -6,10 +6,9 @@
 }
 
 .newPostContainer svg.returnTo {
-  font-size: 2rem;
-  align-self: flex-end;
-  margin-right: 2rem;
-  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  align-self: flex-start;
+  margin-bottom: 2rem;
   color: var(--linkText);
 }
 

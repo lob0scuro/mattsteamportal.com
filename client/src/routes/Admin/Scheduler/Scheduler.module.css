@@ -290,7 +290,7 @@ small.mobileDateRead {
   }
 
   .controlBar .cbRow2 {
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 1rem;
   }
 

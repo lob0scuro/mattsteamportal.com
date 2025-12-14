@@ -4,6 +4,7 @@ import { POST_CATEGORY, VISIBILITY } from "../../../utils/Enums";
 import { renderObjects } from "../../../utils/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faChevronLeft,
   faCircleXmark,
   faDeleteLeft,
   faSignsPost,
@@ -101,7 +102,7 @@ const CreatePost = () => {
   return (
     <div className={styles.newPostContainer}>
       <FontAwesomeIcon
-        icon={faSignsPost}
+        icon={faChevronLeft}
         onClick={() => navigate("/posts")}
         className={styles.returnTo}
       />

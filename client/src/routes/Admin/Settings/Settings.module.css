@@ -122,3 +122,35 @@
   color: red;
   font-size: 28px;
 }
+
+@media screen and (max-width: 450px) {
+  .settingsContainer {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .settingsContainer > div {
+    padding: 10px;
+    min-width: unset;
+    width: 100%;
+    max-height: 400px;
+    overflow: auto;
+  }
+
+  .settingsContainer > div svg.yaw {
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+  }
+  .settingsContainer > div svg.naw {
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+  }
+
+  .shiftItems,
+  .userItems {
+    width: 90%;
+  }
+}

@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request, abort, current_app
 from flask_login import login_required, current_user    
 from app.extensions import db
-from app.models import User, Post, Comment, Shift, Schedule, TimeOffRequest
+from app.models import User, Post, Comment, Shift, Schedule, TimeOffRequest, DepartmentEnum
 from sqlalchemy import desc, select
+from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta, date
 import json
 import platform
@@ -125,24 +126,40 @@ def get_user_schedule(id):
     
     return jsonify(success=True, user=user.serialize(), schedule=[s.serialize() for s in schedule]), 200
 
-
-
-@read_bp.route("/employee_directory", methods=["GET"])
+@read_bp.route("/team_schedules/<department>", methods=["GET"])
 @login_required
-def employee_directory():
-    if not current_user.is_admin:
-        return jsonify(success=False, message="Forbidden"), 403
+def get_team_schedules(department):
     try:
-        employee_data = load_employee_data()
-    except FileNotFoundError as e:
-        print(f"[ERROR]: {e}")
-        return jsonify(success=False, message="Employee data file not found"), 500
-    except json.JSONDecodeError as je:
-        print(f"[ERROR]: {je}")
-        return jsonify(success=False, message="Employee data is corrupted"), 500
-    return jsonify(success=True, employees=employee_data), 200
+        department_enum = DepartmentEnum[department.upper()]
+    except KeyError:
+        return jsonify(success=False, message="Invalid department"), 400
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    
+    try:
+        start = date.fromisoformat(start_date)
+        end = date.fromisoformat(end_date)
+    except ValueError:
+        return jsonify(success=False, message="Invalid date format. User YYYY-MM-DD"), 400
+    try:
+        schedules = db.session.query(Schedule).join(User).options(
+            joinedload(Schedule.user),
+            joinedload(Schedule.shift)
+        ).filter(User.department == department_enum, Schedule.shift_date.between(start, end)).order_by(Schedule.shift_date.asc()).all()
+        
+        serialized = [s.serialize() for s in schedules]
+        
+        return jsonify(success=True, schedules=serialized), 200
+    except Exception as e:
+        current_app.logger.error(f"[DEPARTMENT SCHEDULE QUERY ERROR]: {e}")
+        return jsonify(success=False, message="Error when fetching schedules"), 500
 
 
+
+
+#------------------
+#   SHIFTS QUERY
+#------------------
 @read_bp.route("/shifts", methods=["GET"])
 @login_required
 def get_shifts():

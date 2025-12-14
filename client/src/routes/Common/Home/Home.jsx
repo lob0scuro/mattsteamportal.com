@@ -112,7 +112,10 @@ const Home = () => {
       <div className={styles.userHomeHeader}>
         <div className={styles.userNavi}>
           <FontAwesomeIcon icon={faSignsPost} onClick={() => goto("/posts")} />
-          <FontAwesomeIcon icon={faPeopleGroup} />
+          <FontAwesomeIcon
+            icon={faPeopleGroup}
+            onClick={() => goto("/team-schedules")}
+          />
           <FontAwesomeIcon
             icon={faUserClock}
             onClick={() => goto("/time-off-request")}

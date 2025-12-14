@@ -125,7 +125,7 @@ def create_post():
         
     
     
-@create_bp.route("/add_comment/<int:post_id>", methods=["POST"])
+@create_bp.route("/comment/<int:post_id>", methods=["POST"])
 @login_required
 def add_comment(post_id):
     data = request.get_json()
@@ -140,8 +140,13 @@ def add_comment(post_id):
         db.session.commit()
         
         current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has commented on a post.")
-        return jsonify(success=True, message="Posted!", comment=new_comment.serialize()), 201
+        return jsonify(
+            success=True, 
+            message="Posted!", 
+            comment=new_comment.serialize()
+            ), 201
     except Exception as e:
+        db.session.rollback()
         current_app.logger.error(f"[COMMENT ERROR]: {e}")
         return jsonify(success=False, message="There was an error when posting new comment"), 500
     

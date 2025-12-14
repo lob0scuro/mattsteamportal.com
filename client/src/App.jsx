@@ -19,6 +19,7 @@ import TimeOffStatus from "./routes/Admin/Status/TimeOffStatus.jsx";
 import Posts from "./routes/Common/Portal/Posts/Posts.jsx";
 import CreatePost from "./routes/Admin/CreatePost/CreatePost.jsx";
 import Post from "./routes/Common/Portal/Post/Post.jsx";
+import TeamSchedule from "./routes/Common/Teams/TeamSchedule/TeamSchedule.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="time-off-request" element={<TimeOffRequest />} />
           <Route path="posts" element={<Posts />} />
           <Route path="post/:id" element={<Post />} />
+          <Route path="team-schedules" element={<TeamSchedule />} />
           <Route element={<AdminLayout />}>
             <Route path="settings" element={<Settings />} />
             <Route path="scheduler" element={<Scheduler />} />
