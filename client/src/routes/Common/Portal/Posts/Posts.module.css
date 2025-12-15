@@ -107,3 +107,7 @@
   border: 1px solid var(--textPrimary);
   object-fit: contain;
 }
+
+.postItem .postTitle {
+  cursor: pointer;
+}

@@ -161,7 +161,7 @@ const Home = () => {
               <div key={index} className={styles.dayOfWeek}>
                 <h3>
                   {getWeekdayHeader(shift_date)}{" "}
-                  <small>{convertDateFromStr(shift_date)}</small>
+                  {/* <small>{convertDateFromStr(shift_date)}</small> */}
                 </h3>
                 <div>
                   <p>

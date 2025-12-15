@@ -74,11 +74,12 @@
 }
 
 .currentWeekSchedule .dateHeader {
-  font-size: 18px;
+  font-size: 24px;
+  font-weight: 700;
   background-color: var(--backgroundDark);
   width: 100%;
   border-radius: 8px 8px 0 0;
-  padding: 4px 10px;
+  padding: 10px;
   align-self: center;
   text-align: end;
 }

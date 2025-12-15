@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Weekly Schedule</title>
+
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        margin: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        page-break-inside: auto;
+      }
+
+      thead {
+        background: #f0f0f0;
+      }
+
+      th,
+      td {
+        border: 1px solid #999;
+        padding: 6px;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      th.employee {
+        width: 160px;
+        text-align: left;
+      }
+
+      td.employee {
+        text-align: left;
+        font-weight: bold;
+      }
+
+      /* ---- LOCATION COLORS ---- */
+      .lake_charles {
+        background-color: transparent; /* blue */
+      }
+
+      .jennings {
+        background-color: #a99aeb; /* purple */
+        color: #ffffff;
+        border: 1px solid #000;
+      }
+
+      /* OFF shift */
+      .off {
+        color: #ff0c0c;
+        font-style: italic;
+      }
+
+      /* Ensure clean page breaks */
+      tr {
+        page-break-inside: avoid;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Weekly Schedule<br />{{ start }} – {{ end }}</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="employee">Employee</th>
+          {% for day in days %}
+          <th>{{ day }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for employee, week in grouped.items() %}
+        <tr>
+          <td class="employee">{{ employee }}</td>
+
+          {% for day in days %} {% set cell = week[day] %} {% if cell %}
+          <td class="{{ cell.location }}">
+            {% if cell.time == "OFF" %}
+            <span class="off">OFF</span>
+            {% else %} {{ cell.time }} {% endif %}
+          </td>
+          {% else %}
+          <td>—</td>
+          {% endif %} {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

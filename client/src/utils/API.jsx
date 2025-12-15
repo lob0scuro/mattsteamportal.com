@@ -86,3 +86,31 @@ export const deleteUser = async (id) => {
 //
 //  CREATE
 //
+
+//
+//  PRINT
+//
+export const printSchedule = async (startDate, endDate) => {
+  try {
+    const response = await fetch(
+      `/api/print/schedule?start_date=${startDate}&end_date=${endDate}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch PDF");
+    }
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "weekly_schedule.pdf";
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("[USER DELETION ERROR]: ", error);
+  }
+};

@@ -90,8 +90,8 @@ const Post = () => {
             {post.author.first_name} {post.author.last_name}
           </small>
           <small>{convertDateFromStr(post.created_at)}</small>
+          <p className={styles.postText}>{post.content}</p>
         </div>
-        <p>{post.content}</p>
       </div>
       <div className={styles.commentSection}>
         <h3>

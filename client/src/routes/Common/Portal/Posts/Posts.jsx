@@ -146,7 +146,12 @@ const Posts = () => {
           posts.map(({ id, title, author, file_path, created_at }, index) => (
             <div key={index} className={styles.postItem}>
               <div>
-                <p onClick={() => navigate(`/post/${id}`)}>{title}</p>
+                <p
+                  onClick={() => navigate(`/post/${id}`)}
+                  className={styles.postTitle}
+                >
+                  {title}
+                </p>
                 <small>{convertDateFromStr(created_at)}</small>
                 <p>{author.username}</p>
               </div>

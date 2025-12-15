@@ -1,5 +1,6 @@
 .postContainer {
   width: 100%;
+  max-width: 1600px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,14 +20,18 @@
 }
 .postImage {
   width: 100%;
+  max-width: 800px;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: -1px 1px 4px #777, 1px -1px 3px #888;
+  margin: 0 auto;
 }
 
 .postContent > div {
   display: flex;
   flex-direction: column;
+  width: 90%;
+  margin: 0 auto;
 }
 .postContent small {
   color: var(--linkText);
@@ -34,6 +39,14 @@
 .postContent small.author {
   font-weight: 800;
   font-size: 18px;
+}
+
+.postText {
+  font-size: 22px;
+  margin-top: 2rem;
+  /* background-color: var(--background); */
+  padding: 10px;
+  border-radius: 8px;
 }
 
 .commentSection {

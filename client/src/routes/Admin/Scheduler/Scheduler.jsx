@@ -10,7 +10,13 @@ import {
   suffix,
   toAMPM,
 } from "../../../utils/Helpers";
-import { getShifts, getUsers, getSchedules } from "../../../utils/API";
+
+import {
+  getShifts,
+  getUsers,
+  getSchedules,
+  printSchedule,
+} from "../../../utils/API";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -41,6 +47,7 @@ const Scheduler = () => {
     sales: [],
     service: [],
     cleaner: [],
+    driver: [],
     technician: [],
     office: [],
     all: [],
@@ -77,6 +84,7 @@ const Scheduler = () => {
         sales: userList.users.filter((u) => u.department === "sales"),
         service: userList.users.filter((u) => u.department === "service"),
         cleaner: userList.users.filter((u) => u.department === "cleaner"),
+        driver: userList.users.filter((u) => u.department === "driver"),
         technician: userList.users.filter((u) => u.department === "technician"),
         office: userList.users.filter((u) => u.department === "office"),
         all: userList.users,
@@ -322,7 +330,19 @@ const Scheduler = () => {
   };
 
   const getShiftByID = (id) => shifts.find((s) => s.id === id);
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //   START SCHEDULER
+  //
+  //
+  //
+  //
+  //
+  //
   return (
     <div className={styles.schedulerMaster}>
       <div className={styles.controlBar}>
@@ -531,6 +551,17 @@ const Scheduler = () => {
           </div>
         ))}
         <div className={styles.scheduleFooter}>
+          <button
+            className={styles.printButton}
+            // onClick={() => alert("YO MAMA!!")}
+            onClick={() => {
+              const start = formatDate(currentWeek[0]);
+              const end = formatDate(currentWeek[currentWeek.length - 1]);
+              printSchedule(start, end);
+            }}
+          >
+            Print
+          </button>
           {currentWeek.map((day, index) => (
             <div key={index} className={styles.footerCell}></div>
           ))}

@@ -69,6 +69,8 @@ header img {
   flex: 1;
   padding: 1rem;
   width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
   height: auto;
   display: flex;
   flex-direction: column;
