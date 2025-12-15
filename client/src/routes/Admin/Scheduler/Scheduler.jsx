@@ -56,9 +56,26 @@ const Scheduler = () => {
   const [schedules, setSchedules] = useState([]);
   const [selectedDpt, setSelectedDpt] = useState("all");
   const [selectedShift, setSelectedShift] = useState("");
-  const [pendingAssignments, setPendingAssignments] = useState({});
+  const [pendingAssignments, setPendingAssignments] = useState(() => {
+    const stored = localStorage.getItem("pendingAssignments");
+    return stored ? JSON.parse(stored) : {};
+  });
   const [isLC, setIsLC] = useState(true);
   const currentLocation = isLC ? "lake_charles" : "jennings";
+
+  useEffect(() => {
+    localStorage.setItem(
+      "pendingAssignments",
+      JSON.stringify(pendingAssignments)
+    );
+  }, [pendingAssignments]);
+
+  useEffect(() => {
+    const storedAssignments = localStorage.getItem("pendingAssignments");
+    if (storedAssignments) {
+      setPendingAssignments(JSON.parse(storedAssignments));
+    }
+  }, []);
 
   useEffect(() => {
     const shiftGet = async () => {
@@ -265,6 +282,7 @@ const Scheduler = () => {
       setSchedules(refreshSchedule.schedules);
     }
     setPendingAssignments({});
+    localStorage.removeItem("pendingAssignments");
   };
 
   const handleDeleteSchedule = async (cell) => {
@@ -505,6 +523,11 @@ const Scheduler = () => {
                   display = shift.title;
                 }
               }
+
+              const tooltip =
+                cell.is_time_off && cell.time_off_request
+                  ? cell.time_off_request.reason
+                  : "";
               return (
                 <div
                   className={clsx(
@@ -515,9 +538,16 @@ const Scheduler = () => {
                     cell.status === "committed" && styles.committedCell
                   )}
                   key={cellIndex}
+                  title={tooltip}
                   onClick={() => {
-                    if (!cell.is_time_off && !cell.shift_id) {
+                    if (cell.is_time_off) return;
+                    if (
+                      !cell.shift_id ||
+                      (cell.status === "staged" && selectedShift)
+                    ) {
                       handleCellClick(cell);
+                    } else {
+                      toast.error("Select a shift first to change this cell");
                     }
                   }}
                 >
