@@ -9,7 +9,7 @@ class DepartmentEnum(Enum):
     CLEANER = "cleaner"
     TECHNICIAN = "technician"
     OFFICE = "office"
-    # DRIVER = "driver"
+    DRIVER = "driver"
     
     def __str__(self):
         return self.value

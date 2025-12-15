@@ -31,3 +31,5 @@ notes.txt
 deploy.tar.gz
 
 deployServer.sh
+
+user_load.json
