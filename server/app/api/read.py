@@ -146,10 +146,20 @@ def get_team_schedules(department):
             joinedload(Schedule.user),
             joinedload(Schedule.shift)
         ).filter(User.department == department_enum, Schedule.shift_date.between(start, end)).order_by(Schedule.shift_date.asc()).all()
+                
+        grouped = {}   
+        for s in schedules:
+            uid = s.user.id
+            
+            if uid not in grouped:
+                grouped[uid] = {
+                    "user": s.user.serialize(),
+                    "schedules": []
+                }
+            
+            grouped[uid]["schedules"].append(s.serialize())
         
-        serialized = [s.serialize() for s in schedules]
-        
-        return jsonify(success=True, schedules=serialized), 200
+        return jsonify(success=True, schedules=list(grouped.values())), 200
     except Exception as e:
         current_app.logger.error(f"[DEPARTMENT SCHEDULE QUERY ERROR]: {e}")
         return jsonify(success=False, message="Error when fetching schedules"), 500

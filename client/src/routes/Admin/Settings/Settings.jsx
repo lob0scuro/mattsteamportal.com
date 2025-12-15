@@ -12,6 +12,7 @@ import { toAMPM } from "../../../utils/Helpers";
 import UserForm from "../../../components/Forms/User/UserForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faChevronLeft,
   faCirclePlus,
   faCircleXmark,
   faDeleteLeft,
@@ -75,6 +76,11 @@ const Settings = () => {
 
   return (
     <div className={styles.settingsContainer}>
+      <FontAwesomeIcon
+        icon={faChevronLeft}
+        onClick={() => navigate(-1 || "/")}
+        className={styles.goBack}
+      />
       <div className={styles.shiftSettings}>
         <FontAwesomeIcon
           icon={adding.shift ? faCircleXmark : faCirclePlus}

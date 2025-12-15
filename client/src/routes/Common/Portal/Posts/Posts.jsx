@@ -9,6 +9,7 @@ import {
   faBell,
   faBreadSlice,
   faBullhorn,
+  faChevronLeft,
   faEarthAmericas,
   faForwardStep,
   faGraduationCap,
@@ -75,6 +76,11 @@ const Posts = () => {
   };
   return (
     <div className={styles.portalContainer}>
+      <FontAwesomeIcon
+        icon={faChevronLeft}
+        onClick={() => navigate("/")}
+        className={styles.goBack}
+      />
       <div className={styles.portalHeader}>
         <div className={styles.portalNavi}>
           {/* GENERAL/ALL */}

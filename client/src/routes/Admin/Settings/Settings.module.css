@@ -1,9 +1,14 @@
 .settingsContainer {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: center;
   gap: 3rem;
+}
+
+.settingsContainer .goBack {
+  width: 100%;
 }
 
 .settingsContainer > div {

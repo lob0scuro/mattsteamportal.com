@@ -9,6 +9,7 @@ export const DEPARTMENTS = {
   service: "Service",
   cleaner: "Cleaner",
   technician: "Technician",
+  // driver: "Driver",
 };
 
 export const TIME_OFF_STATUS = {

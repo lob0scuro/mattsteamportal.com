@@ -5,6 +5,12 @@
   gap: 1rem;
 }
 
+.teamScheduleContainer .goBack {
+  margin-block: 0.5rem;
+  font-size: 1.5rem;
+  align-self: flex-start;
+}
+
 p.teamWeekHeader {
   font-size: 18px;
   align-self: center;
@@ -13,10 +19,36 @@ p.teamWeekHeader {
 .teamWeekNavi {
   align-self: center;
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .teamWeekNavi button {
   background-color: transparent;
   box-shadow: unset;
+  font-size: 1.5rem;
+}
+
+.scheduleList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 0.5rem;
+}
+
+.userWeek {
+  border: 1px solid var(--textPrimary);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.userDay {
+  border: 1px solid var(--textSecondary);
+  font-size: 12px;
+  padding: 4px;
+}
+.userDay p:first-child {
+  font-weight: 800;
+  text-decoration: underline;
+  color: var(--linkText);
 }

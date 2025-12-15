@@ -6,6 +6,10 @@ import {
   renderObjects,
   MONTH_NAMES,
   formatDate,
+  convertDateFromStr,
+  parseLocalDate,
+  WEEKDAY,
+  toAMPM,
 } from "../../../../utils/Helpers";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBackwardStep,
   faCalendarWeek,
+  faChevronLeft,
   faForwardStep,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -36,7 +41,7 @@ const TeamSchedule = () => {
       if (!data.success) {
         toast.error(data.message);
       }
-      console.log(data.schedules);
+      //   console.log(data.schedules);
       setSchedules(data.schedules);
     };
     scheduleGet();
@@ -99,12 +104,16 @@ const TeamSchedule = () => {
 
   return (
     <div className={styles.teamScheduleContainer}>
+      <FontAwesomeIcon
+        icon={faChevronLeft}
+        onClick={() => navigate(-1 || "/")}
+        className={styles.goBack}
+      />
       <select
         name="selectedDpt"
         value={selectedDpt}
         onChange={(e) => setSelectedDpt(e.target.value)}
       >
-        <option value="">--select department--</option>
         {renderObjects(DEPARTMENTS)}
       </select>
       <p className={styles.teamWeekHeader}>{getWeekHeader()}</p>
@@ -118,6 +127,23 @@ const TeamSchedule = () => {
         <button onClick={goNext}>
           <FontAwesomeIcon icon={faForwardStep} />
         </button>
+      </div>
+      <div className={styles.scheduleList}>
+        {schedules.map(({ user, schedules }, index) => (
+          <div className={styles.scheduleItem} key={index}>
+            <h4>{user.first_name}</h4>
+            <div className={styles.userWeek}>
+              {schedules.map(({ id, shift, shift_date }, sIndex) => (
+                <div key={sIndex} className={styles.userDay}>
+                  <p>{getWeekdayHeader(shift_date)}</p>
+                  <p>
+                    {toAMPM(shift.start_time)}-{toAMPM(shift.end_time)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

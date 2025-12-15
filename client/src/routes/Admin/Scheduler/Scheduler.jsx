@@ -22,6 +22,7 @@ import {
 import {
   faBackwardStep,
   faCalendarWeek,
+  faChevronLeft,
   faEllipsis,
   faForwardStep,
   faGears,
