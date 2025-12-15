@@ -55,78 +55,7 @@ const TimeOffStatus = () => {
     }
   };
 
-  const createOffSchedule = async (userID, shiftDate) => {
-    try {
-      const response = await fetch("/api/create/schedule", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userID,
-          shift_id: 9999,
-          shift_date: shiftDate,
-          location: "lake_charles",
-        }),
-      });
-
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-    } catch (error) {
-      console.error("[ERROR CREATE OFF]:", error);
-      toast.error(error.message);
-    }
-  };
-
-  const deleteOffSchedule = async (userID, shiftDate) => {
-    try {
-      const response = await fetch(
-        `/api/delete/schedule/${userID}/${shiftDate}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
-
-      const data = await response.json();
-      if (!data.success) throw new Error(data.message);
-    } catch (err) {
-      console.error("[ERROR DELETE OFF]:", err);
-      toast.error(err.message);
-    }
-  };
-
-  const handleScheduleRange = async (create, userID, startDate, endDate) => {
-    const dates = getDatesInRange(startDate, endDate);
-
-    for (const d of dates) {
-      const iso = formatDate(new Date(d));
-      if (create) {
-        await createOffSchedule(userID, iso);
-      } else {
-        await deleteOffSchedule(userID, iso);
-      }
-    }
-  };
-
-  const handleUpdate = async (
-    requestID,
-    newStatus,
-    userID,
-    startDate,
-    endDate
-  ) => {
-    if (newStatus === "approved") {
-      await handleScheduleRange(true, userID, startDate, endDate);
-    }
-
-    if (newStatus === "denied") {
-      await handleScheduleRange(false, userID, startDate, endDate);
-    }
-
+  const handleUpdate = async (requestID, newStatus) => {
     const response = await fetch(
       `/api/update/time_off_request/${requestID}/${newStatus}`,
       {

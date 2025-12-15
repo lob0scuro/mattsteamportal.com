@@ -55,7 +55,8 @@ class User(db.Model, UserMixin):
             "username": self.username,
             "email": self.email,
             "role": str(self.role),
-            "department": str(self.department)
+            "department": str(self.department),
+            "time_off_requests": [t.serialize() for t in self.time_off_requests]
         }
         
     def serialize_full(self):

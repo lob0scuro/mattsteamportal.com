@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, make_response, request, abort
-from app.models import Schedule
+from app.models import Schedule, TimeOffRequest
 from app.extensions import db
-from datetime import datetime
+from datetime import datetime, timedelta
 import pdfkit
 
 print_bp = Blueprint("print", __name__)
@@ -27,8 +27,31 @@ def print_schedule():
         .order_by(Schedule.user_id, Schedule.shift_date)
         .all()
     )
+    
+    time_off = (
+        db.session.query(TimeOffRequest)
+        .join(TimeOffRequest.user)
+        .filter(
+            TimeOffRequest.status == "approved",
+            TimeOffRequest.start_date <= end,
+            TimeOffRequest.end_date >= start
+        )
+        .all()
+    )
 
     grouped = {}
+    
+    for t in time_off:
+        name = f"{t.user.first_name} {t.user.last_name}"
+        if name not in grouped:
+            grouped[name] = {day: None for day in DAYS}
+        for single_date in (t.start_date + timedelta(days=n) for n in range((t.end_date - t.start_date).days + 1)):
+            if start <= single_date <= end:
+                day_key = single_date.strftime("%a")
+                grouped[name][day_key] = {
+                    "time": "R/O",
+                    "location": "none"
+                }
 
     for s in schedules:
         name = s.user.full_name
@@ -37,8 +60,14 @@ def print_schedule():
         if name not in grouped:
             grouped[name] = {day: None for day in DAYS}
 
+        is_time_off = any(
+            t.user_id == s.user_id and t.start_date <= s.shift_date <= t.end_date
+            for t in time_off
+        )
         # ---- TIME STRING LOGIC ----
-        if s.shift_id == 9999:
+        if is_time_off:
+            time_str = "R/O"
+        elif s.shift_id == 9999:
             time_str = "OFF"
 
         elif s.shift_id == 9998:

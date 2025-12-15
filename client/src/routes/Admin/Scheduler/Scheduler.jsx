@@ -516,7 +516,7 @@ const Scheduler = () => {
                   )}
                   key={cellIndex}
                   onClick={() => {
-                    if (!cell.shift_id) {
+                    if (!cell.is_time_off && !cell.shift_id) {
                       handleCellClick(cell);
                     }
                   }}

@@ -26,5 +26,8 @@ class TimeOffRequest(db.Model):
             "end_date": self.end_date.isoformat(),
             "reason": self.reason,
             "status": str(self.status),
-            "user": self.user.serialize()
+            "user": {
+                "first_name": self.user.first_name,
+                "last_name": self.user.last_name
+            }
         }

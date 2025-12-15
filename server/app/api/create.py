@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.models import User, Post, Shift, Comment, Schedule, LocationEnum, TimeOffRequest, PostVisibilityEnum, PostCategoryEnum
+from app.models import User, Post, Shift, Comment, Schedule, LocationEnum, TimeOffRequest, PostVisibilityEnum, PostCategoryEnum, TimeOffStatusEnum
 from app.extensions import db
 from flask_login import current_user, login_required
 import os
@@ -214,6 +214,19 @@ def create_bulk_schedule():
             shift_date = date.fromisoformat(shift_date_str)
             location = LocationEnum(location_str.lower())
             
+            conflict = TimeOffRequest.query.filter(
+                TimeOffRequest.user_id == user_id,
+                TimeOffRequest.start_date <= shift_date,
+                TimeOffRequest.end_date >= shift_date,
+                TimeOffRequest.status == TimeOffStatusEnum.APPROVED
+            ).first()
+            
+            if conflict:
+                return jsonify(
+                    success=False, 
+                    message=f"User {user_id} has approved time off on {shift_date}"
+                ), 400
+            
             exists = Schedule.query.filter_by(
                 user_id=user_id,
                 shift_date=shift_date
@@ -260,18 +273,27 @@ def create_schedule_item():
     
     try:
         location = LocationEnum(location_str.lower())
-    except ValueError:
-        return jsonify(success=False, message="Invalid location"), 400
-    
-    try:
         shift_date_obj = date.fromisoformat(shift_date_str)
     except ValueError:
-        return jsonify(success=False, message="Invalid date format. Use YYYY-MM-DD"), 400
+        return jsonify(success=False, message="Invalid input"), 400
     
     if not User.query.get(user_id):
         return jsonify(success=False, message="User not found"), 404
     if not Shift.query.get(shift_id):
         return jsonify(success=False, message="Shift not found"), 404
+    
+    conflict = TimeOffRequest.query.filter(
+        TimeOffRequest.user_id == user_id,
+        TimeOffRequest.start_date <= shift_date_obj,
+        TimeOffRequest.end_date >= shift_date_obj,
+        TimeOffRequest.status == TimeOffStatusEnum.APPROVED
+    ).first()
+    
+    if conflict:
+        return jsonify(
+            success=False,
+            message="Cannot schedule employee on approved time off"
+        ), 400
     
     existing = Schedule.query.filter_by(user_id=user_id, shift_id=shift_id, shift_date=shift_date_obj).first()
     if existing:
