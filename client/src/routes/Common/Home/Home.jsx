@@ -152,42 +152,42 @@ const Home = () => {
         <p className={styles.dateHeader}>
           <small>{getWeekHeader()}</small>
         </p>
-        {schedule.length !== 0 ? (
-          schedule.map(
-            (
-              { id, location, note, shift, shift_date, shift_id, user },
-              index
-            ) => (
-              <div key={index} className={styles.dayOfWeek}>
-                <h3>
-                  {getWeekdayHeader(shift_date)}{" "}
-                  {/* <small>{convertDateFromStr(shift_date)}</small> */}
-                </h3>
-                <div>
-                  <p>
-                    {shift_id !== 9999
-                      ? `${toAMPM(shift.start_time)} - ${toAMPM(
-                          shift.end_time
-                        )}`
-                      : shift.title}
-                  </p>
-                  {note && <p className={styles.shiftNote}>{note}</p>}
-                </div>
+
+        {currentWeek.map((day, i) => {
+          // find schedule for this day
+          const scheduleForDay = schedule.find((s) => {
+            const sd = parseLocalDate(s.shift_date);
+            return (
+              sd.getFullYear() === day.getFullYear() &&
+              sd.getMonth() === day.getMonth() &&
+              sd.getDate() === day.getDate()
+            );
+          });
+
+          return (
+            <div key={i} className={styles.dayOfWeek}>
+              <h3>{WEEKDAY[i]}</h3>
+              <div>
+                {scheduleForDay ? (
+                  <>
+                    <p>
+                      {scheduleForDay.shift_id !== 9999
+                        ? `${toAMPM(
+                            scheduleForDay.shift.start_time
+                          )} - ${toAMPM(scheduleForDay.shift.end_time)}`
+                        : scheduleForDay.shift.title}
+                    </p>
+                    {scheduleForDay.note && (
+                      <p className={styles.shiftNote}>{scheduleForDay.note}</p>
+                    )}
+                  </>
+                ) : (
+                  <p className={styles.offDay}>R/O</p> // you can style as "Off" or "Time Off"
+                )}
               </div>
-            )
-          )
-        ) : (
-          <h2
-            style={{
-              textAlign: "center",
-              alignSelf: "center",
-              color: "darkred",
-              padding: "1rem",
-            }}
-          >
-            Schedule not set
-          </h2>
-        )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

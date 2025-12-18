@@ -54,8 +54,12 @@ class User(db.Model, UserMixin):
             "last_name": self.last_name,
             "username": self.username,
             "email": self.email,
-            "role": str(self.role),
-            "department": str(self.department),
+            "role": self.role.value if hasattr(self.role, "value") else str(self.role),
+            "department": (
+                self.department.value
+                if hasattr(self.department, "value")
+                else str(self.department)
+            ),
             "time_off_requests": [t.serialize() for t in self.time_off_requests]
         }
         

@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, abort, current_app
 from flask_login import login_required, current_user    
 from app.extensions import db
-from app.models import User, Post, Comment, Shift, Schedule, TimeOffRequest, DepartmentEnum
+from app.models import User, Post, Comment, Shift, Schedule, TimeOffRequest, DepartmentEnum, TimeOffStatusEnum
 from sqlalchemy import desc, select
 from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta, date
@@ -109,23 +109,48 @@ def get_user_schedule(id):
     except ValueError:
         return jsonify(success=False, message="Invalid date format. Use YYYY-MM-DD"), 400
     
+    approved_time_off = (
+        db.session.query(TimeOffRequest)
+        .filter(
+            TimeOffRequest.user_id == id,
+            TimeOffRequest.status == TimeOffStatusEnum.APPROVED,
+            TimeOffRequest.start_date <= end,
+            TimeOffRequest.end_date >= start
+        )
+        .all()
+    )
+    
+    time_off_dates = set()
+    for req in approved_time_off:
+        d = req.start_date
+        while d <= req.end_date:
+            time_off_dates.add(d)
+            d += timedelta(days=1)
+    
     user = User.query.get(id)
     if not user:
         return jsonify(success=False, message="User not found"), 404
     
-    stmt = (
-        select(Schedule)
-        .where(
+    query = (
+        db.session.query(Schedule)
+        .filter(
             Schedule.user_id == id,
             Schedule.shift_date.between(start, end)
         )
-        .order_by(Schedule.shift_date.asc())
     )
     
-    schedule = db.session.execute(stmt).scalars().all()
+    if time_off_dates:
+        query = query.filter(Schedule.shift_date.notin_(time_off_dates))
+        
+    schedule = query.order_by(Schedule.shift_date.asc()).all()
     
-    return jsonify(success=True, user=user.serialize(), schedule=[s.serialize() for s in schedule]), 200
-
+    return jsonify(
+        success=True, 
+        user=user.serialize(),
+        schedule=[s.serialize() for s in schedule]
+    ), 200
+    
+    
 @read_bp.route("/team_schedules/<department>", methods=["GET"])
 @login_required
 def get_team_schedules(department):
@@ -133,36 +158,68 @@ def get_team_schedules(department):
         department_enum = DepartmentEnum[department.upper()]
     except KeyError:
         return jsonify(success=False, message="Invalid department"), 400
+
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
-    
+
     try:
         start = date.fromisoformat(start_date)
         end = date.fromisoformat(end_date)
     except ValueError:
-        return jsonify(success=False, message="Invalid date format. User YYYY-MM-DD"), 400
+        return jsonify(success=False, message="Invalid date format. Use YYYY-MM-DD"), 400
+
     try:
+        # fetch all users in department
+        users = User.query.filter(User.department == department_enum).all()
+        user_ids = [u.id for u in users]
+
+        # fetch all approved time-off
+        approved_time_off = db.session.query(TimeOffRequest).filter(
+            TimeOffRequest.user_id.in_(user_ids),
+            TimeOffRequest.status == TimeOffStatusEnum.APPROVED,
+            TimeOffRequest.start_date <= end,
+            TimeOffRequest.end_date >= start
+        ).all()
+
+        # build date lookup
+        time_off_map = {}
+        for req in approved_time_off:
+            if req.user_id not in time_off_map:
+                time_off_map[req.user_id] = set()
+            d = req.start_date
+            while d <= req.end_date:
+                time_off_map[req.user_id].add(d)
+                d += timedelta(days=1)
+
+        # fetch schedules
         schedules = db.session.query(Schedule).join(User).options(
             joinedload(Schedule.user),
             joinedload(Schedule.shift)
-        ).filter(User.department == department_enum, Schedule.shift_date.between(start, end)).order_by(Schedule.shift_date.asc()).all()
-                
-        grouped = {}   
-        for s in schedules:
+        ).filter(
+            User.department == department_enum,
+            Schedule.shift_date.between(start, end)
+        ).order_by(Schedule.shift_date.asc()).all()
+
+        # filter out approved time-off
+        filtered = [
+            s for s in schedules
+            if s.user_id not in time_off_map or s.shift_date not in time_off_map[s.user_id]
+        ]
+
+        # group by user
+        grouped = {}
+        for s in filtered:
             uid = s.user.id
-            
             if uid not in grouped:
-                grouped[uid] = {
-                    "user": s.user.serialize(),
-                    "schedules": []
-                }
-            
+                grouped[uid] = {"user": s.user.serialize(), "schedules": []}
             grouped[uid]["schedules"].append(s.serialize())
-        
+
         return jsonify(success=True, schedules=list(grouped.values())), 200
+
     except Exception as e:
         current_app.logger.error(f"[DEPARTMENT SCHEDULE QUERY ERROR]: {e}")
         return jsonify(success=False, message="Error when fetching schedules"), 500
+
 
 
 

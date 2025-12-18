@@ -133,14 +133,31 @@ const TeamSchedule = () => {
           <div className={styles.scheduleItem} key={index}>
             <h4>{user.first_name}</h4>
             <div className={styles.userWeek}>
-              {schedules.map(({ id, shift, shift_date }, sIndex) => (
-                <div key={sIndex} className={styles.userDay}>
-                  <p>{getWeekdayHeader(shift_date)}</p>
-                  <p>
-                    {toAMPM(shift.start_time)}-{toAMPM(shift.end_time)}
-                  </p>
-                </div>
-              ))}
+              {currentWeek.map((day, i) => {
+                // see if there is a schedule for this day
+                const scheduleForDay = schedules.find((s) => {
+                  const sd = parseLocalDate(s.shift_date);
+                  return (
+                    sd.getFullYear() === day.getFullYear() &&
+                    sd.getMonth() === day.getMonth() &&
+                    sd.getDate() === day.getDate()
+                  );
+                });
+
+                return (
+                  <div key={i} className={styles.userDay}>
+                    <p>{WEEKDAY[i]}</p>
+                    {scheduleForDay ? (
+                      <p>
+                        {toAMPM(scheduleForDay.shift.start_time)}-
+                        {toAMPM(scheduleForDay.shift.end_time)}
+                      </p>
+                    ) : (
+                      <p className={styles.offDay}>R/O</p> // add a CSS class for styling
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))}

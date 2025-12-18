@@ -31,7 +31,14 @@ class Schedule(db.Model):
             "shift_id": self.shift_id,
             "shift_date": self.shift_date.isoformat(),
             "location": str(self.location),
-            "user": self.user.serialize(),
+            "user": {
+                "id": self.user.id,
+                "first_name": self.user.first_name,
+                "last_name": self.user.last_name,
+                "email": self.user.email,
+                "role": str(self.user.role),
+                "department": str(self.user.department)
+            },
             "shift": {
                 "title": self.shift.title,
                 "start_time": start.strftime("%H:%M") if start else None,
