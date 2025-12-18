@@ -2,7 +2,7 @@ import styles from "./Login.module.css";
 import React, { useState } from "react";
 import { useAuth } from "../../../Context/AuthContext";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { setUser, setLoading, loading } = useAuth();
@@ -39,7 +39,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className={styles.loginBlock}>
       <form className={styles.loginForm} onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Username</label>
@@ -63,6 +63,9 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </form>
+      <Link className={styles.forgotLink} to={"/forgot-password"}>
+        Forgot Password?
+      </Link>
     </div>
   );
 };

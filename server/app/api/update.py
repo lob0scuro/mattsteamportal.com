@@ -1,11 +1,12 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.models import User, Post, TimeOffStatusEnum, RoleEnum, TimeOffRequest
+from app.models import User, Post, TimeOffStatusEnum, RoleEnum, TimeOffRequest, DepartmentEnum
 from app.extensions import db
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from pdf2image import convert_from_path
 import os
 import platform
+import re
 
 update_bp = Blueprint("update", __name__)
 
@@ -103,3 +104,70 @@ def update_time_off_status(id, status):
     time_off_request.status = status
     db.session.commit()
     return jsonify(success=True, message="Status updated!"), 200
+
+
+@update_bp.route("/user/<int:id>", methods=["PUT"])
+@login_required
+def update_user(id):
+    data = request.get_json()
+    if not data:
+        return jsonify(success=False, message="No input data provided"), 400
+
+    user = User.query.get_or_404(id)
+
+    # 🔐 Authorization
+    is_admin = current_user.role == RoleEnum.ADMIN
+    is_self = current_user.id == user.id
+
+    if not (is_admin or is_self):
+        return jsonify(success=False, message="Not authorized"), 403
+
+    # 🚫 Immutable fields
+    forbidden_fields = {"id", "username", "password", "password_hash"}
+    if forbidden_fields & data.keys():
+        return jsonify(success=False, message="Attempted to update restricted fields"), 400
+
+    # 🧾 Editable fields
+    if "first_name" in data:
+        user.first_name = data["first_name"].title()
+
+    if "last_name" in data:
+        user.last_name = data["last_name"].title()
+
+    if "email" in data:
+        email = data["email"].lower().strip()
+        if User.query.filter(User.email == email, User.id != user.id).first():
+            return jsonify(success=False, message="Email already in use"), 400
+        user.email = email
+
+    if "phone_number" in data:
+        phone = data["phone_number"]
+        if phone:
+            digits = re.sub(r"\D", "", phone)
+            if len(digits) != 10:
+                return jsonify(success=False, message="Invalid phone number"), 400
+            user.phone_number = digits
+        else:
+            user.phone_number = None
+
+    # 🛡️ Admin-only fields
+    if is_admin:
+        if "role" in data:
+            try:
+                user.role = RoleEnum(data["role"].lower())
+            except ValueError:
+                return jsonify(success=False, message="Invalid role"), 400
+
+        if "department" in data:
+            try:
+                user.department = DepartmentEnum(data["department"].lower())
+            except ValueError:
+                return jsonify(success=False, message="Invalid department"), 400
+
+    db.session.commit()
+
+    current_app.logger.info(
+        f"User {user.id} updated by {current_user.id}"
+    )
+
+    return jsonify(success=True, user=user.serialize()), 200

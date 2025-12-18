@@ -10,6 +10,7 @@ const UserForm = ({ onNewUser }) => {
     last_name: "",
     username: "",
     email: "",
+    phone_number: "",
     role: "",
     department: "",
     password: "",
@@ -55,6 +56,7 @@ const UserForm = ({ onNewUser }) => {
         last_name: "",
         username: "",
         email: "",
+        phone_number: "",
         role: "",
         department: "",
         password: "",
@@ -102,6 +104,18 @@ const UserForm = ({ onNewUser }) => {
           type="email"
           name="email"
           value={formData.email}
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="phone_number">Phone Number</label>
+        <input
+          type="tel"
+          name="phone_number"
+          pattern="[\d\s()+-]+"
+          placeholder="5551234567"
+          inputMode="tel"
+          value={formData.phone_number}
           onChange={handleChange}
         />
       </div>

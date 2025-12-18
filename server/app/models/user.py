@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    phone_number: Mapped[str] = mapped_column(String(20), nullable=True)
     password_hash: Mapped[str] = mapped_column(String(128), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
@@ -54,6 +55,7 @@ class User(db.Model, UserMixin):
             "last_name": self.last_name,
             "username": self.username,
             "email": self.email,
+            "phone_number": self.phone_number,
             "role": self.role.value if hasattr(self.role, "value") else str(self.role),
             "department": (
                 self.department.value

@@ -20,6 +20,8 @@ import Posts from "./routes/Common/Portal/Posts/Posts.jsx";
 import CreatePost from "./routes/Admin/CreatePost/CreatePost.jsx";
 import Post from "./routes/Common/Portal/Post/Post.jsx";
 import TeamSchedule from "./routes/Common/Teams/TeamSchedule/TeamSchedule.jsx";
+import ForgotPassword from "./routes/Common/Login/ForgotPassword/ForgotPassword.jsx";
+import ResetPassword from "./routes/Common/Login/ForgotPassword/ResetPassword.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -27,6 +29,9 @@ const App = () => {
       <Route path="/" element={<RootLayout />}>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
+        {/* <Route path="reset-password/" element={<ResetPassword />} /> */}
         <Route element={<ProtectedLayout />}>
           <Route index element={<Home />} />
           <Route path="time-off-request" element={<TimeOffRequest />} />

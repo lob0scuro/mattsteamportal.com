@@ -33,6 +33,7 @@ def create_user(data: dict, department: DepartmentEnum):
         first_name=first_name,
         last_name=last_name,
         email=data["email"],
+        phone_number=data["phone_number"],
         username=data["username"],
         role=RoleEnum.EMPLOYEE,
         department=department,

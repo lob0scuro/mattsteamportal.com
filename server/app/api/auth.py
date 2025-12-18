@@ -5,6 +5,8 @@ from app.models import User
 from app.models import RoleEnum, DepartmentEnum
 from flask_mailman import EmailMessage
 from itsdangerous import URLSafeTimedSerializer
+from datetime import datetime, timezone
+import re
 
 
 auth_bp = Blueprint('auth', __name__)
@@ -30,8 +32,9 @@ def register():
         return jsonify(success=False, message="No input data provided"), 400
     first_name = data.get('first_name')
     last_name = data.get('last_name')
-    username = data.get('username')
-    email = data.get('email')
+    username = data.get('username').lower().strip()
+    email = data.get('email').lower().strip()
+    phone_number = data.get('phone_number')
     role = data.get("role")
     department = data.get("department")
     password = data.get('password')
@@ -40,9 +43,18 @@ def register():
     if password != check_password:
         return jsonify(success=False, message="Passwords do not match"), 400
     
-    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
-        return jsonify(success=False, message="Username or email already exists"), 400
+    normalized_phone = None
+    if phone_number:
+        digits = re.sub(r'\D', '', phone_number)
+        if len(digits) != 10:
+            return jsonify(success=False, message="Invalid phone number"), 400
+        normalized_phone = digits
     
+    if User.query.filter(
+        (User.username == username) | (User.email == email)
+        ).first():
+        return jsonify(success=False, message="Username or email already exists"), 400
+
     try:
         roled = RoleEnum(role.lower())
     except ValueError:
@@ -51,13 +63,14 @@ def register():
     try:
         departmented = DepartmentEnum(department.lower())
     except ValueError:
-        return jsonify(success=False, message="Invalide Department"), 400
+        return jsonify(success=False, message="Invalid Department"), 400
     
     new_user = User(
         username=username,
         first_name=first_name.title(),
         last_name=last_name.title(),
         email=email,
+        phone_number=normalized_phone,
         role=roled,
         department=departmented,
     )
@@ -161,39 +174,48 @@ def invite_link():
 def request_password_reset():
     data = request.get_json()
     email = data.get("email")
+
     user = User.query.filter_by(email=email).first()
-    
-    if not user:
-        return jsonify(success=False, message="No user with that email found."), 404
-    
-    token = generate_reset_token(user.email)
-    reset_url = f"https://mattsteamportal.com/reset_password/{token}"
-    
-    message = EmailMessage(
-        subject="Password Reset Request",
-        body=f"Click the link to reset your password:\n\n{reset_url}",
-        to=[user.email]
-    )
-    message.send()
-    
-    current_app.logger.info(f"{user.first_name} {user.last_name} has requested a password reset, A request has been sent to: {email}")
-    return jsonify(success=True, message=f"Password reset has been sent to: {email}"), 200
+
+    if user:
+        token = generate_reset_token(user.email)
+        reset_url = f"{current_app.config['FRONTEND_URL']}/reset-password/{token}"
+
+        message = EmailMessage(
+            subject="Password Reset Request",
+            body=f"Click the link to reset your password:\n\n{reset_url}",
+            to=[user.email]
+        )
+        message.send()
+
+        current_app.logger.info(f"{user.email} requested password reset")
+
+    # ALWAYS return success
+    return jsonify(
+        success=True,
+        message="If an account with that email exists, a reset link has been sent."
+    ), 200
+
 
 @auth_bp.route("/reset_password/<token>", methods=["POST"])
 def reset_password(token):
     data = request.get_json()
     new_password = data.get("password")
+    confirm = data.get("confirm")
     email = verify_reset_token(token)
     
+    if new_password != confirm:
+        return jsonify(success=False, message="Passwords do not match."), 400
+    
     if not email:
-        return jsonify(success=False, message="Invalid or expired token."), 400
+        return jsonify(success=False, message="Invalid or expired token."), 401
     
     user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify(success=False, message="User not found"), 404
     
-    hashed_pw = bcrypt.generate_password_hash(new_password).decode('utf-8')
-    user.password_hash = hashed_pw
+    user.set_password(new_password)
+    user.updated_at = datetime.now(timezone.utc)
     db.session.commit()
     
     current_app.logger.info(f"{user.first_name} {user.last_name} has reset their password")
