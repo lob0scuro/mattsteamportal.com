@@ -117,3 +117,9 @@
   padding: 2rem 1rem;
   font-size: 1.5rem;
 }
+
+.shiftNote {
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+}

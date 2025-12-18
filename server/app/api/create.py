@@ -357,3 +357,29 @@ def time_off_request():
         return jsonify(success=False, message="There was an error when submitting time off request."), 500
         
     
+#--------------------
+#   CREATE A SCHEDULE NOTE
+#--------------------    
+
+@create_bp.route("/schedule_note", methods=["POST"])
+@login_required
+def create_schedule_note():
+    data = request.get_json()
+    schedule_id = data.get("schedule_id")
+    note = data.get("note", "").strip()
+    
+    if not schedule_id:
+        return jsonify(success=False, message="Schedule ID is required"), 400
+    
+    schedule_item = Schedule.query.get(schedule_id)
+    if not schedule_item:
+        return jsonify(success=False, message="Schedule item not found"), 404
+    
+    try:
+        schedule_item.note = note
+        db.session.commit()
+        return jsonify(success=True, message="Note added to schedule item", schedule=schedule_item.serialize()), 201
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"[SCHEDULE NOTE ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when adding note to schedule item."), 500

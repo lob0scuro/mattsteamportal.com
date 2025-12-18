@@ -45,10 +45,50 @@ p.teamWeekHeader {
 .userDay {
   border: 1px solid var(--textSecondary);
   font-size: 12px;
-  padding: 4px;
+  padding: 4px 10px;
 }
-.userDay p:first-child {
+
+.userDay .dayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.userDay .dayHeader p:first-child {
   font-weight: 800;
   text-decoration: underline;
   color: var(--linkText);
+}
+
+.userDay .dayHeader svg {
+  color: var(--textSecondary);
+  font-size: 1.1rem;
+}
+
+.userDay .dayNote {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--textSecondary);
+  margin-top: 4px;
+  cursor: alias;
+}
+
+.noteInput {
+  display: flex;
+  gap: 10px;
+  margin-block: 10px;
+}
+.noteInput input {
+  border-radius: 8px;
+  padding: 4px;
+  flex-grow: 0.5;
+}
+
+.noteInput button {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background-color: var(--buttonBackground);
+  color: var(--buttonText);
+  box-shadow: var(--buttonBoxShadow);
+  font-weight: 600;
 }
