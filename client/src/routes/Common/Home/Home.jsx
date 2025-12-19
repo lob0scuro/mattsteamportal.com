@@ -111,11 +111,11 @@ const Home = () => {
     setCurrentWeek(buildWeekFromMonday(nextMonday));
   };
 
-  const getTimeOffForDate = (shiftDateStr) => {
+  const getTimeOffForDay = (day) => {
     return timeOff.find((t) => {
       const start = parseLocalDate(t.start_date);
       const end = parseLocalDate(t.end_date);
-      return shiftDateStr >= start && shiftDateStr <= end;
+      return day >= start && day <= end;
     });
   };
 
@@ -199,12 +199,12 @@ const Home = () => {
                       <p className={styles.shiftNote}>{scheduleForDay.note}</p>
                     )}
                   </>
-                ) : getTimeOffForDate(day) ? (
+                ) : getTimeOffForDay(day) ? (
                   <p className={styles.offDay}>
-                    R/O {getTimeOffForDate(day).is_pto ? "(PTO)" : ""}
+                    R/O {getTimeOffForDay(day).is_pto ? "(PTO)" : ""}
                   </p>
                 ) : (
-                  <p className={styles.noShift}>—</p>
+                  <p className={styles.noShift}>-</p>
                 )}
               </div>
             </div>
