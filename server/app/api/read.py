@@ -33,6 +33,9 @@ def get_user(user_id):
     user = User.query.get(user_id)
     if not user:
         return jsonify(success=False, message="User not found"), 404
+    full = request.args.get("full", "false").lower() == "true"
+    if full:
+        return jsonify(success=True, user=user.serialize_full()), 200
     return jsonify(success=True, user=user.serialize()), 200
 
 

@@ -22,6 +22,7 @@ import Post from "./routes/Common/Portal/Post/Post.jsx";
 import TeamSchedule from "./routes/Common/Teams/TeamSchedule/TeamSchedule.jsx";
 import ForgotPassword from "./routes/Common/Login/ForgotPassword/ForgotPassword.jsx";
 import ResetPassword from "./routes/Common/Login/ForgotPassword/ResetPassword.jsx";
+import EditUser from "./routes/Common/User/EditUser.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="posts" element={<Posts />} />
           <Route path="post/:id" element={<Post />} />
           <Route path="team-schedules" element={<TeamSchedule />} />
+          <Route path="edit-user/:id" element={<EditUser />} />
           <Route element={<AdminLayout />}>
             <Route path="settings" element={<Settings />} />
             <Route path="scheduler" element={<Scheduler />} />

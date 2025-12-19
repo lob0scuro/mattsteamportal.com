@@ -1,0 +1,36 @@
+.editUserForm {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.editUserForm div {
+  display: flex;
+  flex-direction: column;
+}
+
+.editUserForm label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.editUserForm input {
+  padding: 8px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.setEditingButton {
+  background-color: var(--buttonSecondary);
+  box-shadow: unset;
+  border-radius: 8px;
+  border: 1px solid var(--linkText);
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}

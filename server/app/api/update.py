@@ -123,7 +123,7 @@ def update_user(id):
         return jsonify(success=False, message="Not authorized"), 403
 
     # 🚫 Immutable fields
-    forbidden_fields = {"id", "username", "password", "password_hash"}
+    forbidden_fields = {"id", "password", "password_hash"}
     if forbidden_fields & data.keys():
         return jsonify(success=False, message="Attempted to update restricted fields"), 400
 
@@ -133,6 +133,12 @@ def update_user(id):
 
     if "last_name" in data:
         user.last_name = data["last_name"].title()
+        
+    if "username" in data:
+        username = data["username"].lower().strip()
+        if User.query.filter(User.username == username, User.id != user.id).first():
+            return jsonify(success=False, message="Username already in use"), 400
+        user.username = username
 
     if "email" in data:
         email = data["email"].lower().strip()
@@ -170,4 +176,4 @@ def update_user(id):
         f"User {user.id} updated by {current_user.id}"
     )
 
-    return jsonify(success=True, user=user.serialize()), 200
+    return jsonify(success=True, user=user.serialize(), message="User updated successfully"), 200

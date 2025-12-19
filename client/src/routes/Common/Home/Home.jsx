@@ -16,11 +16,13 @@ import {
   faCalendarDay,
   faCalendarWeek,
   faCheckToSlot,
+  faCircleInfo,
   faForwardStep,
   faGears,
   faPeopleGroup,
   faSignsPost,
   faUserClock,
+  faUserPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarDays } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -134,7 +136,13 @@ const Home = () => {
           )}
         </div>
         <h1>
-          {user.first_name} {user.last_name}
+          {user.first_name} {user.last_name}{" "}
+          <span>
+            <FontAwesomeIcon
+              icon={faCircleInfo}
+              onClick={() => navigate(`/edit-user/${user.id}`)}
+            />
+          </span>
         </h1>
         <div className={styles.switcher}>
           <button onClick={goPrev}>

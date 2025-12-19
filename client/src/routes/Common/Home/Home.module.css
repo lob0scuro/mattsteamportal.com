@@ -16,10 +16,16 @@
 }
 
 .userHomeHeader h1 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--backgroundDark);
   text-shadow: -1px 1px 10px var(--buttonSecondary);
+}
+.userHomeHeader h1 span {
+  margin-left: 0.6rem;
+  cursor: pointer;
+  color: var(--buttonSecondary);
+  border-radius: 50%;
 }
 .userNavi {
   display: flex;
