@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.models import User, Post, TimeOffStatusEnum, RoleEnum, TimeOffRequest, DepartmentEnum
+from app.models import User, Post, TimeOffStatusEnum, RoleEnum, TimeOffRequest, DepartmentEnum, Schedule
 from app.extensions import db
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
@@ -90,20 +90,35 @@ def update_time_off_status(id, status):
     if current_user.role not in [RoleEnum.ADMIN]:
         return jsonify(success=False, message="Unauthorized"), 403
     
-    status = status.lower()    
     time_off_request = TimeOffRequest.query.get(id)
     
     if not time_off_request:
         return jsonify(success=False, message="Request not found"), 404
     
     try:
-        status = TimeOffStatusEnum(status)
+        new_status = TimeOffStatusEnum(status.lower())
     except ValueError:
         return jsonify(success=False, message="Invalid request status"), 400
+
+    if time_off_request.status == new_status:
+        return jsonify(success=False, message="Status already set"), 400
     
-    time_off_request.status = status
-    db.session.commit()
-    return jsonify(success=True, message="Status updated!"), 200
+    if new_status == TimeOffStatusEnum.APPROVED:
+        Schedule.query.filter(
+            Schedule.user_id == time_off_request.user_id,
+            Schedule.shift_date.between(time_off_request.start_date, time_off_request.end_date)
+        ).delete(synchronize_session=False)
+        
+    time_off_request.status = new_status
+    
+    try:
+        db.session.commit()
+        current_app.logger.info(f"Time off request {id} updated to {status} by {current_user.id}")
+        return jsonify(success=True, message="Request updated successfully"), 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"[TIME OFF UPDATE ERROR]: {e}")
+        return jsonify(success=False, message="There was an error when updating time off request"), 500
 
 
 @update_bp.route("/user/<int:id>", methods=["PUT"])

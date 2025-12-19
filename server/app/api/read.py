@@ -112,6 +112,20 @@ def get_user_schedule(id):
     except ValueError:
         return jsonify(success=False, message="Invalid date format. Use YYYY-MM-DD"), 400
     
+    user = User.query.get(id)
+    if not user:
+        return jsonify(success=False, message="User not found"), 404
+    
+    schedule = (
+        db.session.query(Schedule)
+        .filter(
+            Schedule.user_id == id,
+            Schedule.shift_date.between(start, end)
+        )
+        .order_by(Schedule.shift_date.asc())
+        .all()
+    )
+    
     approved_time_off = (
         db.session.query(TimeOffRequest)
         .filter(
@@ -120,37 +134,15 @@ def get_user_schedule(id):
             TimeOffRequest.start_date <= end,
             TimeOffRequest.end_date >= start
         )
+        .order_by(TimeOffRequest.start_date.asc())
         .all()
     )
-    
-    time_off_dates = set()
-    for req in approved_time_off:
-        d = req.start_date
-        while d <= req.end_date:
-            time_off_dates.add(d)
-            d += timedelta(days=1)
-    
-    user = User.query.get(id)
-    if not user:
-        return jsonify(success=False, message="User not found"), 404
-    
-    query = (
-        db.session.query(Schedule)
-        .filter(
-            Schedule.user_id == id,
-            Schedule.shift_date.between(start, end)
-        )
-    )
-    
-    if time_off_dates:
-        query = query.filter(Schedule.shift_date.notin_(time_off_dates))
-        
-    schedule = query.order_by(Schedule.shift_date.asc()).all()
     
     return jsonify(
         success=True, 
         user=user.serialize(),
-        schedule=[s.serialize() for s in schedule]
+        schedule=[s.serialize() for s in schedule],
+        time_off=[t.serialize() for t in approved_time_off]
     ), 200
     
     

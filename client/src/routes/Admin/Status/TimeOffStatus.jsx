@@ -81,7 +81,7 @@ const TimeOffStatus = () => {
         <ul className={styles.pendingList}>
           {ro.pending.length !== 0 ? (
             ro.pending.map(
-              ({ id, user, status, reason, start_date, end_date }) => (
+              ({ id, user, reason, start_date, end_date, is_pto }) => (
                 <li key={id}>
                   <div>
                     <h4>
@@ -96,6 +96,9 @@ const TimeOffStatus = () => {
                     </p>
                     <p>
                       <strong>Reason:</strong> {reason}
+                    </p>
+                    <p>
+                      <strong>PTO:</strong> {is_pto ? "Yes" : "No"}
                     </p>
                   </div>
                   <div>
@@ -143,7 +146,7 @@ const TimeOffStatus = () => {
         <ul className={styles.approvedList}>
           {ro.approved.length !== 0 ? (
             ro.approved.map(
-              ({ id, user, status, reason, start_date, end_date }) => (
+              ({ id, user, reason, start_date, end_date, is_pto }) => (
                 <li key={id}>
                   <div>
                     <h4>
@@ -158,6 +161,9 @@ const TimeOffStatus = () => {
                     </p>
                     <p>
                       <strong>Reason:</strong> {reason}
+                    </p>
+                    <p>
+                      <strong>PTO:</strong> {is_pto ? "Yes" : "No"}
                     </p>
                   </div>
                   <div>
@@ -192,7 +198,7 @@ const TimeOffStatus = () => {
         <ul className={styles.deniedList}>
           {ro.denied.length !== 0 ? (
             ro.denied.map(
-              ({ id, user, status, reason, start_date, end_date }) => (
+              ({ id, user, reason, start_date, end_date, is_pto }) => (
                 <li key={id}>
                   <div>
                     <h4>
@@ -207,6 +213,9 @@ const TimeOffStatus = () => {
                     </p>
                     <p>
                       <strong>Reason:</strong> {reason}
+                    </p>
+                    <p>
+                      <strong>PTO:</strong> {is_pto ? "Yes" : "No"}
                     </p>
                   </div>
                   <div>

@@ -33,6 +33,7 @@ const Home = () => {
   const today = new Date();
   const [currentWeek, setCurrentWeek] = useState(getWorkWeekFromDate(today));
   const [schedule, setSchedule] = useState([]);
+  const [timeOff, setTimeOff] = useState([]);
 
   useEffect(() => {
     const start = formatDate(currentWeek[0]);
@@ -46,6 +47,7 @@ const Home = () => {
         toast.error(data.message);
       }
       setSchedule(data.schedule);
+      setTimeOff(data.time_off);
     };
     scheduleGet();
   }, [user, currentWeek]);
@@ -107,6 +109,14 @@ const Home = () => {
     const nextMonday = new Date(currentWeek[0]);
     nextMonday.setDate(nextMonday.getDate() + 7);
     setCurrentWeek(buildWeekFromMonday(nextMonday));
+  };
+
+  const getTimeOffForDate = (shiftDateStr) => {
+    return timeOff.find((t) => {
+      const start = parseLocalDate(t.start_date);
+      const end = parseLocalDate(t.end_date);
+      return shiftDateStr >= start && shiftDateStr <= end;
+    });
   };
 
   return (
@@ -189,8 +199,12 @@ const Home = () => {
                       <p className={styles.shiftNote}>{scheduleForDay.note}</p>
                     )}
                   </>
+                ) : getTimeOffForDate(day) ? (
+                  <p className={styles.offDay}>
+                    R/O {getTimeOffForDate(day).is_pto ? "(PTO)" : ""}
+                  </p>
                 ) : (
-                  <p className={styles.offDay}>R/O</p> // you can style as "Off" or "Time Off"
+                  <p className={styles.noShift}>—</p>
                 )}
               </div>
             </div>

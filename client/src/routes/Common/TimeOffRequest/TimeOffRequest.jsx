@@ -14,6 +14,7 @@ const TimeOffRequest = () => {
     end_date: "",
     reason: "",
     other_reason: "",
+    is_pto: false,
   });
 
   const handleChange = (e) => {
@@ -38,6 +39,7 @@ const TimeOffRequest = () => {
       end_date: formData.end_date,
       reason:
         formData.reason === "other" ? formData.other_reason : formData.reason,
+      is_pto: formData.is_pto,
     };
 
     try {
@@ -87,6 +89,18 @@ const TimeOffRequest = () => {
             value={formData.end_date}
             onChange={handleChange}
             required
+          />
+        </div>
+        <div className={styles.ptoBlock}>
+          <label htmlFor="is_pto">Using PTO</label>
+          <input
+            type="checkbox"
+            name="is_pto"
+            checked={formData.is_pto}
+            onChange={(e) =>
+              setFormData({ ...formData, is_pto: e.target.checked })
+            }
+            className={styles.isPto}
           />
         </div>
         {/* RADIO REASON SWITCHES */}

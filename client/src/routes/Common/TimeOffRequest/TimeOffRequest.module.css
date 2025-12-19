@@ -38,6 +38,22 @@ a.viewRequests:hover {
   padding: 4px;
 }
 
+.timeOffRequestMasterBlock form div.ptoBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.ptoBlock label {
+  font-size: 1.2rem;
+}
+
+.ptoBlock input[type="checkbox"].isPto {
+  border: 1px solid blue;
+  width: 1.5rem;
+}
+
 h3.reasonHeader {
   font-size: 2rem;
   margin-top: 2rem;

@@ -339,6 +339,7 @@ def time_off_request():
     start_str = data.get("start_date")
     end_str = data.get("end_date")
     reason = data.get("reason")
+    is_pto = data.get("is_pto", False)
     
     try:
         start_date = date.fromisoformat(start_str)
@@ -360,6 +361,7 @@ def time_off_request():
             start_date=start_date,
             end_date=end_date,
             reason=reason,
+            is_pto=is_pto
         )
         db.session.add(time_off)
         db.session.commit()
