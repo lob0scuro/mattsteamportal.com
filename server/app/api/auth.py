@@ -95,6 +95,7 @@ def login():
         return jsonify(success=False, message="Invalid credentials"), 401
     else:
         login_user(user)
+        current_app.logger.info(f"{user.first_name} {user.last_name} has logged in.")
         return jsonify(success=True, message=f"Logged in as {user.full_name}", user=user.serialize()), 200
 
 

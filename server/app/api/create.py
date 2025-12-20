@@ -96,14 +96,14 @@ def create_post():
         
         current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created a post '{post.title}'")
 
-        # users = User.query.all()
+        users = User.query.all()
         
-        # for user in users:
-        #     EmailMessage(
-        #         subject=f"New Team Portal Post from {current_user.username}!",
-        #         body=f"Hey {user.username}, {current_user.username} has just posted on mattsteamportal.com",
-        #         to=[user.email],
-        #     ).send()
+        for user in users:
+            EmailMessage(
+                subject=f"New Team Portal Post from {current_user.username}!",
+                body=f"Hey {user.username}, {current_user.username} has just posted on mattsteamportal.com",
+                to=[user.email],
+            ).send()
             
         return jsonify(success=True, message="New post created!", post_id=post.id), 201
     except Exception as e:
@@ -139,7 +139,7 @@ def add_comment(post_id):
         db.session.add(new_comment)
         db.session.commit()
         
-        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has commented on a post.")
+        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has commented on post {post_id}.")
         return jsonify(
             success=True, 
             message="Posted!", 
@@ -179,6 +179,7 @@ def create_shift():
         
         db.session.add(new_shift)
         db.session.commit()
+        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created a new shift '{title}'.")
         return jsonify(success=True, message="New shift created!", shift=new_shift.serialize()), 201
     except Exception as e:
         db.session.rollback()
@@ -250,18 +251,18 @@ def create_bulk_schedule():
             db.session.add(schedule_item)
         db.session.commit()
         
-        # try:
-        #     users = User.query.all()
-        #     for user in users:
-        #         EmailMessage(
-        #             subject=f"New Schedule Posted!",
-        #             body=f"Hey {user.username}, a new schedule has just been posted on mattsteamportal.com",
-        #             to=[user.email],
-        #         ).send()
-        # except Exception as e:
-        #     current_app.logger.error(f"[SCHEDULE EMAIL ERROR]: {e}")
+        try:
+            users = User.query.all()
+            for user in users:
+                EmailMessage(
+                    subject=f"New Schedule Posted!",
+                    body=f"Hey {user.username}, a new schedule has just been posted on mattsteamportal.com",
+                    to=[user.email],
+                ).send()
+        except Exception as e:
+            current_app.logger.error(f"[SCHEDULE EMAIL ERROR]: {e}")
 
-        
+        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created/updated bulk schedule items.")
         return jsonify(success=True, message="Shifts have been submitted!"), 201
     except Exception as e:
         db.session.rollback()
@@ -365,6 +366,7 @@ def time_off_request():
         )
         db.session.add(time_off)
         db.session.commit()
+        current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has submitted a time off request from {start_date} to {end_date}.")
         return jsonify(success=True, message="Time off has been submitted for approval"), 201
     except Exception as e:
         db.session.rollback()
