@@ -498,7 +498,7 @@ const Scheduler = () => {
                 <div>
                   <FontAwesomeIcon
                     icon={faEllipsis}
-                    onClick={() => navigate(`/user/${userRow[0].user_id}`)}
+                    onClick={() => navigate(`/edit-user/${userRow[0].user_id}`)}
                   />
                 </div>
               </h4>
