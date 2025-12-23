@@ -157,7 +157,7 @@ const Posts = () => {
               </div>
               {file_path && (
                 <img
-                  src={`http://127.0.0.1:8000/${file_path}`}
+                  src={`https://45.56.74.113:8000/${file_path}`}
                   alt={file_path}
                   className={styles.postItemImage}
                 />
