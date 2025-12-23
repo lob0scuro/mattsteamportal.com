@@ -79,7 +79,7 @@ const Post = () => {
       <div className={styles.postContent}>
         {post.file_path && (
           <img
-            src={`https://45.56.74.113:8000${post.file_path}`}
+            src={`https://mattsteamportal.com${post.file_path}`}
             alt={post.file_path}
             className={styles.postImage}
           />

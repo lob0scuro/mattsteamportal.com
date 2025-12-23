@@ -157,7 +157,7 @@ const Posts = () => {
               </div>
               {file_path && (
                 <img
-                  src={`https://45.56.74.113:8000${file_path}`}
+                  src={`https://mattsteamportal.com${file_path}`}
                   alt={file_path}
                   className={styles.postItemImage}
                 />
