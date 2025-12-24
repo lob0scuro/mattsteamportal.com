@@ -3,6 +3,7 @@ from app.models import Schedule, TimeOffRequest
 from app.extensions import db
 from datetime import datetime, timedelta
 import pdfkit
+import os
 
 print_bp = Blueprint("print", __name__)
 
@@ -97,9 +98,15 @@ def print_schedule():
         end=end.strftime("%B %d"),
         days=DAYS
     )
+    
+    WKTHMLTOPDF_PATH = (
+        r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+        if os.name == "nt"
+        else "/usr/bin/wkhtmltopdf"
+    )
 
     config = pdfkit.configuration(
-        wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+        wkhtmltopdf=WKTHMLTOPDF_PATH
     )
 
     pdf = pdfkit.from_string(html, False, configuration=config)

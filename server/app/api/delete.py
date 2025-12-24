@@ -14,6 +14,7 @@ def delete_user(id):
     if not user:
         return jsonify(success=False, message="User not found"), 404
     try:
+        Schedule.query.filter_by(user_id=user.id).delete(synchronize_session=False)
         db.session.delete(user)
         db.session.commit()
         return jsonify(success=True, message="User has been deleted"), 200
