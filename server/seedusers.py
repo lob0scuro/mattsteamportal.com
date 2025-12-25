@@ -24,7 +24,7 @@ def user_exists(email: str, username: str) -> bool:
 
 def create_user(data: dict, department: DepartmentEnum):
     if user_exists(data["email"], data["username"]):
-        print(f"Skipping existing user: {data["email"]}")
+        print(f'Skipping existing user: {data["email"]}')
         return
     
     first_name, last_name = split_name(data["name"])
