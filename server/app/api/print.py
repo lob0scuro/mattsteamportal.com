@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, make_response, request, abort
-from app.models import Schedule, TimeOffRequest
+from app.models import Schedule, TimeOffRequest, DepartmentEnum, User
 from app.extensions import db
 from datetime import datetime, timedelta
 import pdfkit
@@ -13,6 +13,8 @@ DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 def print_schedule():
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
+    
+    department = request.args.get("department", "all").lower()
 
     if not start_date or not end_date:
         abort(400, "start date and end date are required")
@@ -20,16 +22,38 @@ def print_schedule():
     start = datetime.fromisoformat(start_date).date()
     end = datetime.fromisoformat(end_date).date()
 
-    schedules = (
+
+    # -----------------------------
+    # SCHEDULE QUERY
+    # -----------------------------
+    schedule_query = (
         db.session.query(Schedule)
         .join(Schedule.user)
         .join(Schedule.shift)
         .filter(Schedule.shift_date.between(start, end))
-        .order_by(Schedule.user_id, Schedule.shift_date)
+    )
+    
+    
+    if department != "all":
+        try:
+            dept_enum = DepartmentEnum(department)
+        except ValueError:
+            abort(400, "Invalid department value")
+        schedule_query = schedule_query.filter(Schedule.user.has(department=dept_enum))
+        
+    schedules = (
+        schedule_query
+        .order_by(
+            Schedule.user_id,
+            Schedule.shift_date
+        )
         .all()
     )
     
-    time_off = (
+    # -----------------------------
+    # TIME OFF QUERY
+    # -----------------------------
+    time_off_query = (
         db.session.query(TimeOffRequest)
         .join(TimeOffRequest.user)
         .filter(
@@ -37,8 +61,11 @@ def print_schedule():
             TimeOffRequest.start_date <= end,
             TimeOffRequest.end_date >= start
         )
-        .all()
     )
+    
+    if department != "all":
+        time_off_query = time_off_query.filter(TimeOffRequest.user.has(department=dept_enum))
+    time_off = time_off_query.all()
 
     grouped = {}
     
@@ -91,6 +118,10 @@ def print_schedule():
             "location": s.location.name.lower()  # for CSS
         }
 
+
+    # -----------------------------
+    # PDF RENDER
+    # -----------------------------
     html = render_template(
         "print_schedules.html",
         grouped=grouped,

@@ -90,10 +90,10 @@ export const deleteUser = async (id) => {
 //
 //  PRINT
 //
-export const printSchedule = async (startDate, endDate) => {
+export const printSchedule = async (startDate, endDate, department) => {
   try {
     const response = await fetch(
-      `/api/print/schedule?start_date=${startDate}&end_date=${endDate}`
+      `/api/print/schedule?start_date=${startDate}&end_date=${endDate}&department=${department}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch PDF");

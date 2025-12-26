@@ -38,8 +38,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { clsx } from "clsx";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../Context/AuthContext";
 
 const Scheduler = () => {
+  const { loading, setLoading } = useAuth();
   const today = new Date();
   const navigate = useNavigate();
   const [currentWeek, setCurrentWeek] = useState(getWorkWeekFromDate(today));
@@ -260,29 +262,35 @@ const Scheduler = () => {
       toast.error("No changes to submit");
       return;
     }
+    setLoading(true);
+    try {
+      const response = await fetch("/api/create/bulk_schedule", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ schedules: assignments }),
+      });
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.message);
+      }
 
-    const response = await fetch("/api/create/bulk_schedule", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ schedules: assignments }),
-    });
-    const data = await response.json();
-    if (!data.success) {
-      toast.error(data.message);
-      return;
+      toast.success(data.message);
+
+      const refreshSchedule = await getSchedules();
+      if (refreshSchedule.success) {
+        setSchedules(refreshSchedule.schedules);
+      }
+      setPendingAssignments({});
+      localStorage.removeItem("pendingAssignments");
+      setLoading(false);
+    } catch (error) {
+      toast.error(error.message);
+      console.error("Error submitting schedule:", error);
+      setLoading(false);
     }
-
-    toast.success(data.message);
-
-    const refreshSchedule = await getSchedules();
-    if (refreshSchedule.success) {
-      setSchedules(refreshSchedule.schedules);
-    }
-    setPendingAssignments({});
-    localStorage.removeItem("pendingAssignments");
   };
 
   const handleDeleteSchedule = async (cell) => {
@@ -587,7 +595,7 @@ const Scheduler = () => {
             onClick={() => {
               const start = formatDate(currentWeek[0]);
               const end = formatDate(currentWeek[currentWeek.length - 1]);
-              printSchedule(start, end);
+              printSchedule(start, end, selectedDpt);
             }}
           >
             Print

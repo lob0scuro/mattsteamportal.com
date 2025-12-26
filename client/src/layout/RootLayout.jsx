@@ -3,7 +3,7 @@ import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "../Context/AuthContext";
 import toast from "react-hot-toast";
-import LOGO from "../assets/matts-logo.png";
+import LOGO from "../assets/portal-logo.png";
 
 const RootLayout = () => {
   const { user, setUser, loading } = useAuth();
