@@ -251,16 +251,16 @@ def create_bulk_schedule():
             db.session.add(schedule_item)
         db.session.commit()
         
-        # try:
-        #     users = User.query.all()
-        #     for user in users:
-        #         EmailMessage(
-        #             subject=f"New Schedule Posted!",
-        #             body=f"Hey {user.username}, a new schedule has just been posted on mattsteamportal.com",
-        #             to=[user.email],
-        #         ).send()
-        # except Exception as e:
-        #     current_app.logger.error(f"[SCHEDULE EMAIL ERROR]: {e}")
+        try:
+            users = User.query.all()
+            for user in users:
+                EmailMessage(
+                    subject=f"New Schedule Posted!",
+                    body=f"Hey {user.username}, a new schedule has just been posted on mattsteamportal.com",
+                    to=[user.email],
+                ).send()
+        except Exception as e:
+            current_app.logger.error(f"[SCHEDULE EMAIL ERROR]: {e}")
 
         current_app.logger.info(f"{current_user.first_name} {current_user.last_name} has created/updated bulk schedule items.")
         return jsonify(success=True, message="Shifts have been submitted!"), 201
