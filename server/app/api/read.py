@@ -44,6 +44,11 @@ def get_user(user_id):
 def get_users():
     users = User.query.all()
     users_data = [user.serialize() for user in users]
+    # for u in users:
+    #     if u.email == "ambernicole@mattsappliancesla.net":
+    #         pass
+    #     else:
+    #         users_data.append(u.serialize())
     return jsonify(success=True, users=users_data), 200
 
 
