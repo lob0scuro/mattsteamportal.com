@@ -5,7 +5,7 @@ import {
   deleteShift,
   deleteUser,
   getShifts,
-  getUsers,
+  getAllUsers,
 } from "../../../utils/API";
 import toast from "react-hot-toast";
 import { toAMPM } from "../../../utils/Helpers";
@@ -41,7 +41,7 @@ const Settings = () => {
   }, []);
   useEffect(() => {
     const get = async () => {
-      const got = await getUsers();
+      const got = await getAllUsers();
       if (!got.success) {
         toast.error(got.message);
         return;

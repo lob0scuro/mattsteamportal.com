@@ -43,14 +43,21 @@ def get_user(user_id):
 @login_required
 def get_users():
     users = User.query.all()
-    users_data = [user.serialize() for user in users]
-    # for u in users:
-    #     if u.email == "ambernicole@mattsappliancesla.net":
-    #         pass
-    #     else:
-    #         users_data.append(u.serialize())
+    users_data = []
+    for u in users:
+        if u.email == "ambernicole@mattsappliancesla.net":
+            pass
+        else:
+            users_data.append(u.serialize())
     return jsonify(success=True, users=users_data), 200
 
+
+@read_bp.route('/all_users', methods=['GET'])
+@login_required
+def get_all_users():
+    users = User.query.all()
+    users_data = [user.serialize() for user in users]
+    return jsonify(success=True, users=users_data), 200
 
 ########################
 ########################

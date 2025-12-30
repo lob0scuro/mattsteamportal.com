@@ -29,6 +29,20 @@ export const getUsers = async () => {
   }
 };
 
+export const getAllUsers = async () => {
+  try {
+    const response = await fetch("/api/read/all_users");
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.error);
+    }
+    return { success: true, users: data.users };
+  } catch (error) {
+    console.error("[SHIFT GET ERROR]: ", error);
+    return { success: false, message: error.message };
+  }
+};
+
 export const getSchedules = async () => {
   try {
     const response = await fetch("/api/read/schedules");
